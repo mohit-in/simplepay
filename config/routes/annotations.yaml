@@ -1,0 +1,5 @@
+#config/routes/annotations.yaml
+#Note: use your own resource/directory as you prefer
+rest_controller:
+    resource: ../../src/Controller/API/V1/User
+    type: annotation
