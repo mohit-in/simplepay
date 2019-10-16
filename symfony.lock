@@ -292,6 +292,9 @@
     "symfony/polyfill-php73": {
         "version": "v1.12.0"
     },
+    "symfony/process": {
+        "version": "v4.3.5"
+    },
     "symfony/routing": {
         "version": "4.2",
         "recipe": {
@@ -339,8 +342,20 @@
             "templates/base.html.twig"
         ]
     },
+    "symfony/var-dumper": {
+        "version": "v4.3.5"
+    },
     "symfony/var-exporter": {
         "version": "v4.3.5"
+    },
+    "symfony/web-server-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "dae9b39fd6717970be7601101ce5aa960bf53d9a"
+        }
     },
     "symfony/yaml": {
         "version": "v4.3.5"

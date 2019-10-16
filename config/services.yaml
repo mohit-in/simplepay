@@ -24,4 +24,11 @@ services:
         tags: ['controller.service_arguments']
 
     # add more service definitions when explicit configuration is needed
+    user_api_validate_service:
+      class: ..\src\Service\UserApiValidationService
+      public: true
+
+    user_api_processing_service:
+      class: ..\src\Service\UserApiProcessingService
+      public: true
     # please note that last definitions always *replace* previous ones

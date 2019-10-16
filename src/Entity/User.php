@@ -32,7 +32,7 @@ class User
     private $mobile;
 
     /**
-     * @ORM\Column(type="string", length=10, nullable=true)
+     * @ORM\Column(type="string", length=10, nullable=true, options={"default" : "active"})
      */
     private $status;
 
@@ -42,7 +42,7 @@ class User
     private $password;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float", nullable=true, options={"default" : 0})
      */
     private $balance;
 
