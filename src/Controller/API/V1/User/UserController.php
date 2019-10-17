@@ -24,7 +24,7 @@ class UserController extends FOSRestController
         $respone = $this->container
                         ->get('user_api_processing_service')
                         ->processCreateUserRequest($requestContent);
-                        
+
         return View::create($respone, Response::HTTP_CREATED);
     }
 
@@ -42,7 +42,7 @@ class UserController extends FOSRestController
         $respone = $this->container
                         ->get('user_api_processing_service')
                         ->processgetUserDetailsRequest($requestContent);
-        return View::create($respone, Response::HTTP_CREATED);
+        return View::create($respone, Response::HTTP_OK);
     }
 
     /**
@@ -59,7 +59,7 @@ class UserController extends FOSRestController
         $respone = $this->container
                         ->get('user_api_processing_service')
                         ->processDeleteUserRequest($requestContent);
-        return View::create($respone, Response::HTTP_CREATED);
+        return View::create($respone, Response::HTTP_OK);
     }
 
     /**
@@ -71,18 +71,11 @@ class UserController extends FOSRestController
     {   
             
         parse_str($request->getContent(),$requestContent);
-
-
-        print_r($requestContent);exit;
-
-
-
-        $requestContent = array();
         $requestContent['id'] = $id;
         $respone = array();
         $respone = $this->container
                         ->get('user_api_processing_service')
-                        ->processDeleteUserRequest($requestContent);
-        return View::create($respone, Response::HTTP_CREATED);
+                        ->processUpdateUserRequest($requestContent);
+        return View::create($respone, Response::HTTP_OK);
     }
 }

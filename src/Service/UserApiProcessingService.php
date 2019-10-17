@@ -30,6 +30,8 @@ class UserApiProcessingService extends BaseService
         $user->setMobile($requestContent['mobile']);
         $user->setPassword($requestContent['password']);
         $user->setStatus($requestContent['status']);
+        $user->setCreatedAt(new \Datetime());
+        $user->setLastModifiedAt(new \Datetime());
         
         $this->entityManager->persist($user);
         $this->entityManager->flush();
@@ -77,15 +79,14 @@ class UserApiProcessingService extends BaseService
      *  @return array
      */
     public function processUpdateUserRequest($requestContent) {
-        
+
         $userRepository = $this->entityManager->getRepository('App:User');
         $user = $userRepository->find($requestContent['id']);
         if(!$user) {
-
             throw new HttpException(404,"User not found by ". $requestContent['id']." id");
         }
         $user->setName($requestContent['name']);
-        $this->entityManager->remove($user);
+        $this->entityManager->persist($user);
         $this->entityManager->flush();
         return $user;
     }
