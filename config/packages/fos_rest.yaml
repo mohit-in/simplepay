@@ -8,4 +8,8 @@ fos_rest:
         view_response_listener: 'force'
         formats:
             json: true
-        
+    body_converter:
+        enabled: true
+        validate: true
+        validation_errors_argument: validationErrors
+    

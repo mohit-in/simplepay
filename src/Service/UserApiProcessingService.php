@@ -15,9 +15,9 @@ class UserApiProcessingService extends BaseService
      */
     public function processCreateUserRequest($requestContent)
     {   
-        
+        //print_r($requestContent);exit;
         $userRepository = $this->entityManager->getRepository('App:User');
-        $user = $userRepository->findByEmail($requestContent['email']);
+        $user = $userRepository->findOneByEmail($requestContent['email']);
         if($user) { 
 
             throw new HttpException(200,"User already created by ".$requestContent['email']." email");
@@ -27,11 +27,28 @@ class UserApiProcessingService extends BaseService
         $user->setName($requestContent['name']);
         $user->setMobile($requestContent['mobile']);
         $user->setPassword($requestContent['password']);
+        $user->setStatus($requestContent['status']);
         $user->setCreatedAt(new \Datetime);
         $user->setLastModifiedAt(new \Datetime);
         
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+        return $user;
+    }
+    /**
+     *  Function to process User Get Details API request.
+     *
+     *  @param array $requestContent
+     *  @return array
+     */
+    public function processgetUserDetailsRequest($requestContent) {
+
+        $userRepository = $this->entityManager->getRepository('App:User');
+        $user = $userRepository->findByMobile("99993345816");
+        if(!$user) {
+
+            throw new HttpException(404,"User not found by ". $requestContent['id']." id");
+        }
         return $user;
     }
 }

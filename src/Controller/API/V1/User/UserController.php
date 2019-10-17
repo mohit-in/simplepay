@@ -30,12 +30,15 @@ class UserController extends FOSRestController
      * @param Request $request
      * @return View
      */
-    public function getUserDetails(Request $request)
+    public function getUserDetails(Request $request,$id)
     {   
+        $requestContent = array();
+        $requestContent['id'] = $id;
+        
         $respone = array();
         $respone = $this->container
                         ->get('user_api_processing_service')
-                        ->processCreateUserRequest();
+                        ->processgetUserDetailsRequest($requestContent);
         return View::create($respone, Response::HTTP_CREATED);
     }
 }
