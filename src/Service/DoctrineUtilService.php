@@ -31,36 +31,20 @@ abstract class DoctrineUtilService
     {
         return $this->logger;
     }
+        
+    public function SaveEntity($entity) {
 
-    
-    /**
-     * @param EntityManager $entityManager
-     */
-    public function setEntityManager(EntityManager $entityManager): void
-    {
-        $this->entityManager = $entityManager;
+        $this->submitEntity($entity,'persist');
     }
+    public function deleteEntity($entity) {
 
-    /**
-     * @param LoggerInterface $logger
-     */
-    public function setLogger(LoggerInterface $logger): void
-    {
-        $this->logger = $logger;
+        $this->submitEntity($entity,'remove');
     }
+    public function deleteEntity($entity) {
 
-
-
-
-    public function save($entity, $flush = 0) {
-
-        $this->submit($entity, $flush, 'persist');
+        $this->submitEntity($entity,'remove');
     }
-    public function remove($entity,$flush = 0) {
-
-        $this->submit($entity,$flush,'remove');
-    }
-    private function submit($entity, $action) {
+    private function submitEntity($entity, $action) {
 
         try {
 
@@ -72,11 +56,7 @@ abstract class DoctrineUtilService
 
                 $this->entityManager->remove($entity);   
             }
-            if($flush == 1) {
-
-                $this->entityManager->flush();    
-            }
-                
+            $this->entityManager->flush();    
             return $entity;
         }
         catch (\Exception $ex) {

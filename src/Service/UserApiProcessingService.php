@@ -5,7 +5,7 @@ namespace App\Service;
 use App\Entity\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class UserApiProcessingService extends DoctrineUtilService
+class UserApiProcessingService extends BaseService
 {
     /**
      *  Function to process User Create API request.
@@ -18,6 +18,11 @@ class UserApiProcessingService extends DoctrineUtilService
         /* Checking user is already present or not by this email */
         $userRepository = $this->entityManager->getRepository('App:User');
         $user = $userRepository->findOneByEmail($requestContent['email']);
+        
+        if($user) { 
+
+            throw new HttpException(403,"User already present by ".$requestContent['email']." email");
+        }
 
         $user = new User();
         $user->setEmail($requestContent['email']);
@@ -25,11 +30,9 @@ class UserApiProcessingService extends DoctrineUtilService
         $user->setMobile($requestContent['mobile']);
         $user->setPassword($requestContent['password']);
         $user->setStatus($requestContent['status']);
-        $user->setCreatedAt(new \Datetime);
-        $user->setLastModifiedAt(new \Datetime);
-            
-        $this->saveEntity($user);
         
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
         return $user;
     }
     /**
@@ -44,7 +47,7 @@ class UserApiProcessingService extends DoctrineUtilService
         $user = $userRepository->find($requestContent['id']);
         if(!$user) { 
 
-            throw new HttpException(200,"User not found by ". $requestContent['id']." id");
+            throw new HttpException(404,"User not found by ". $requestContent['id']." id");
         }
         return $user;
     }
@@ -53,7 +56,7 @@ class UserApiProcessingService extends DoctrineUtilService
      *  Function to process User Delete API request.
      *
      *  @param array $requestContent
-     *  @return boolean
+     *  @return array
      */
     public function processDeleteUserRequest($requestContent) {
 
@@ -64,7 +67,7 @@ class UserApiProcessingService extends DoctrineUtilService
         }
         $this->entityManager->remove($user);
         $this->entityManager->flush();
-        return true;
+        return $user;
     }
 
     /**
@@ -74,7 +77,7 @@ class UserApiProcessingService extends DoctrineUtilService
      *  @return array
      */
     public function processUpdateUserRequest($requestContent) {
-
+        
         $userRepository = $this->entityManager->getRepository('App:User');
         $user = $userRepository->find($requestContent['id']);
         if(!$user) {
