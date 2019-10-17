@@ -18,10 +18,13 @@ class UserController extends FOSRestController
      */
     public function createUser(Request $request)
     {   
+        $requestContent = $request->request->all();
+
         $respone = array();
         $respone = $this->container
                         ->get('user_api_processing_service')
-                        ->processCreateUserRequest($request->request->all());
+                        ->processCreateUserRequest($requestContent);
+                        
         return View::create($respone, Response::HTTP_CREATED);
     }
 
@@ -39,6 +42,47 @@ class UserController extends FOSRestController
         $respone = $this->container
                         ->get('user_api_processing_service')
                         ->processgetUserDetailsRequest($requestContent);
+        return View::create($respone, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @Rest\Delete("/{id}")
+     * @param Request $request
+     * @return View
+     */
+    public function deleteUser(Request $request,$id)
+    {   
+        $requestContent = array();
+        $requestContent['id'] = $id;
+
+        $respone = array();
+        $respone = $this->container
+                        ->get('user_api_processing_service')
+                        ->processDeleteUserRequest($requestContent);
+        return View::create($respone, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @Rest\Patch("/{id}")
+     * @param Request $request
+     * @return View
+     */
+    public function UpdateUserDetails(Request $request,$id)
+    {   
+            
+        parse_str($request->getContent(),$requestContent);
+
+
+        print_r($requestContent);exit;
+
+
+
+        $requestContent = array();
+        $requestContent['id'] = $id;
+        $respone = array();
+        $respone = $this->container
+                        ->get('user_api_processing_service')
+                        ->processDeleteUserRequest($requestContent);
         return View::create($respone, Response::HTTP_CREATED);
     }
 }
