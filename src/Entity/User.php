@@ -3,14 +3,16 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-Use App\Entity\Common\IndetifiableEntity;
+use App\Entity\Traits\EntityIdTrait;
+use App\Entity\Traits\EntityTimestampableTrait;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
 class User
 {
-    
+    use EntityIdTrait;
+    use EntityTimestampableTrait;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -24,7 +26,6 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\NotNull 
      */
     private $mobile;
 

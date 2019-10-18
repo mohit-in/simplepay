@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Entity\User;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserApiProcessingService extends BaseService
@@ -10,8 +12,10 @@ class UserApiProcessingService extends BaseService
     /**
      *  Function to process User Create API request.
      *
-     *  @param array $requestContent
-     *  @return array
+     * @param array $requestContent
+     * @return array
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function processCreateUserRequest($requestContent)
     {   
@@ -30,9 +34,7 @@ class UserApiProcessingService extends BaseService
         $user->setMobile($requestContent['mobile']);
         $user->setPassword($requestContent['password']);
         $user->setStatus($requestContent['status']);
-        $user->setCreatedAt(new \Datetime());
-        $user->setLastModifiedAt(new \Datetime());
-        
+
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         return $user;
@@ -47,7 +49,7 @@ class UserApiProcessingService extends BaseService
 
         $userRepository = $this->entityManager->getRepository('App:User');
         $user = $userRepository->find($requestContent['id']);
-        if(!$user){ 
+        if(!$user){
 
             throw new HttpException(404,"User not found by ". $requestContent['id']." id");
         }

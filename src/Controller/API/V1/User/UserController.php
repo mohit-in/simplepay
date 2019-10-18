@@ -6,13 +6,12 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController; 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Application\Service\UserApiProcessingService;
 use FOS\RestBundle\View\View;
 
 class UserController extends FOSRestController
 { 
     /**
-     * To create a user
+     * Function to handle User Create API request
      * @Rest\Post("/")
      * @param Request $request
      * @return View
@@ -21,26 +20,26 @@ class UserController extends FOSRestController
     {   
         $requestContent = $request->request->all();
 
-        $respone = array();
-        $respone = $this->container
+        $response = $this->container
                         ->get('user_api_processing_service')
                         ->processCreateUserRequest($requestContent);
 
-        return View::create($respone, Response::HTTP_CREATED);
+        return View::create($response, Response::HTTP_CREATED);
+
     }
 
     /**
-     * To get the user details
+     * To GET the details of user by using user id.
      * @Rest\Get("/{id}")
      * @param Request $request
+     * @param $id
      * @return View
      */
     public function getUserDetails(Request $request,$id)
     {   
         $requestContent = array();
         $requestContent['id'] = $id;
-        
-        $respone = array();
+
         $respone = $this->container
                         ->get('user_api_processing_service')
                         ->processgetUserDetailsRequest($requestContent);
@@ -51,6 +50,7 @@ class UserController extends FOSRestController
      * To delete the user
      * @Rest\Delete("/{id}")
      * @param Request $request
+     * @param $id
      * @return View
      */
     public function deleteUser(Request $request,$id)
@@ -58,17 +58,17 @@ class UserController extends FOSRestController
         $requestContent = array();
         $requestContent['id'] = $id;
 
-        $respone = array();
-        $respone = $this->container
+        $response = $this->container
                         ->get('user_api_processing_service')
                         ->processDeleteUserRequest($requestContent);
-        return View::create($respone, Response::HTTP_OK);
+        return View::create($response, Response::HTTP_OK);
     }
 
     /**
      * to update user details
      * @Rest\Patch("/{id}")
      * @param Request $request
+     * @param $id
      * @return View
      */
     public function UpdateUserDetails(Request $request,$id)
@@ -76,10 +76,9 @@ class UserController extends FOSRestController
             
         parse_str($request->getContent(),$requestContent);
         $requestContent['id'] = $id;
-        $respone = array();
-        $respone = $this->container
+        $response = $this->container
                         ->get('user_api_processing_service')
                         ->processUpdateUserRequest($requestContent);
-        return View::create($respone, Response::HTTP_OK);
+        return View::create($response, Response::HTTP_OK);
     }
 }
