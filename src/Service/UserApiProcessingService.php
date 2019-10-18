@@ -21,7 +21,7 @@ class UserApiProcessingService extends BaseService
         
         if($user) { 
 
-            throw new HttpException(403,"User already present by ".$requestContent['email']." email");
+            throw new HttpException(409,"User already present by ".$requestContent['email']." email");
         }
 
         $user = new User();
@@ -47,7 +47,7 @@ class UserApiProcessingService extends BaseService
 
         $userRepository = $this->entityManager->getRepository('App:User');
         $user = $userRepository->find($requestContent['id']);
-        if(!$user) { 
+        if(!$user){ 
 
             throw new HttpException(404,"User not found by ". $requestContent['id']." id");
         }
