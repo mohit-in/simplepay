@@ -12,6 +12,7 @@ use FOS\RestBundle\View\View;
 class UserController extends FOSRestController
 { 
     /**
+     * To create a user
      * @Rest\Post("/")
      * @param Request $request
      * @return View
@@ -29,6 +30,7 @@ class UserController extends FOSRestController
     }
 
     /**
+     * To get the user details
      * @Rest\Get("/{id}")
      * @param Request $request
      * @return View
@@ -46,6 +48,7 @@ class UserController extends FOSRestController
     }
 
     /**
+     * To delete the user
      * @Rest\Delete("/{id}")
      * @param Request $request
      * @return View
@@ -63,6 +66,7 @@ class UserController extends FOSRestController
     }
 
     /**
+     * to update user details
      * @Rest\Patch("/{id}")
      * @param Request $request
      * @return View
