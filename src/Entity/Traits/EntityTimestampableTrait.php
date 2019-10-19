@@ -18,24 +18,24 @@ trait EntityTimestampableTrait
      */
     protected $last_modified_at;
 
-    protected function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
     }
 
-    protected function setCreatedAt()
+    public function setCreatedAt()
     {
         $this->created_at = new \DateTime;
 
         return $this;
     }
 
-    protected function getLastModifiedAt(): ?\DateTimeInterface
+    public function getLastModifiedAt(): ?\DateTimeInterface
     {
         return $this->last_modified_at;
     }
 
-    protected function setLastModifiedAt()
+    public function setLastModifiedAt($last_modified_at)
     {
         $this->last_modified_at = new \DateTime;
 

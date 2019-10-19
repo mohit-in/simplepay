@@ -29,7 +29,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * To GET the details of user by using user id.
+     * Function to GET the details of user by using user id.
      * @Rest\Get("/{id}")
      * @param Request $request
      * @param $id
@@ -47,7 +47,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * To delete the user
+     * Function to handle User Delete API request
      * @Rest\Delete("/{id}")
      * @param Request $request
      * @param $id
@@ -65,7 +65,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * to update user details
+     * Function to handle User Update API request
      * @Rest\Patch("/{id}")
      * @param Request $request
      * @param $id

@@ -23,7 +23,7 @@ class UserApiProcessingService extends BaseService
         $userRepository = $this->entityManager->getRepository('App:User');
         $user = $userRepository->findOneByEmail($requestContent['email']);
         
-        if($user) { 
+        if($user) {
 
             throw new HttpException(409,"User already present by ".$requestContent['email']." email");
         }
@@ -34,18 +34,21 @@ class UserApiProcessingService extends BaseService
         $user->setMobile($requestContent['mobile']);
         $user->setPassword($requestContent['password']);
         $user->setStatus($requestContent['status']);
+        $user->setCreatedAt(new \Datetime());
+        $user->setLastModifiedAt(new \Datetime());
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
         return $user;
     }
+
     /**
      *  Function to process User Get Details API request.
      *
-     *  @param array $requestContent
-     *  @return array
+     * @param array $requestContent
+     * @return object|null
      */
-    public function processgetUserDetailsRequest($requestContent) {
+    public function processGetUserDetailsRequest($requestContent) {
 
         $userRepository = $this->entityManager->getRepository('App:User');
         $user = $userRepository->find($requestContent['id']);
@@ -59,8 +62,10 @@ class UserApiProcessingService extends BaseService
     /**
      *  Function to process User Delete API request.
      *
-     *  @param array $requestContent
-     *  @return array
+     * @param array $requestContent
+     * @return object|null
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function processDeleteUserRequest($requestContent) {
 
@@ -77,8 +82,10 @@ class UserApiProcessingService extends BaseService
     /**
      *  Function to process User Update API request.
      *
-     *  @param array $requestContent
-     *  @return array
+     * @param array $requestContent
+     * @return object|null
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function processUpdateUserRequest($requestContent) {
 
