@@ -15,13 +15,13 @@
         "symfony/framework-bundle": "4.3.*",
         "symfony/maker-bundle": "^1.13",
         "symfony/orm-pack": "^1.0",
-        "symfony/phpunit-bridge": "^4.3",
         "symfony/validator": "4.3.*",
         "symfony/var-dumper": "4.3.*",
         "symfony/web-server-bundle": "4.3.*",
         "symfony/yaml": "4.3.*"
     },
     "require-dev": {
+        "symfony/phpunit-bridge": "^4.3"
     },
     "config": {
         "preferred-install": {
