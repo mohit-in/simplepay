@@ -2,22 +2,23 @@
 
 namespace App\Controller\API\V1\User;
 
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\FOSRestController; 
+use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Application\Service\UserApiProcessingService;
+use App\Service\UserApiProcessingService;
 use FOS\RestBundle\View\View;
 
-class UserController extends FOSRestController
-{ 
+class UserController extends AbstractFOSRestController
+{
     /**
      * @Rest\Post("/")
      * @param Request $request
      * @return View
      */
     public function createUser(Request $request)
-    {   
+    {
         $requestContent = $request->request->all();
 
         $respone = array();
@@ -34,10 +35,10 @@ class UserController extends FOSRestController
      * @return View
      */
     public function getUserDetails(Request $request,$id)
-    {   
+    {
         $requestContent = array();
         $requestContent['id'] = $id;
-        
+
         $respone = array();
         $respone = $this->container
                         ->get('user_api_processing_service')
@@ -51,7 +52,7 @@ class UserController extends FOSRestController
      * @return View
      */
     public function deleteUser(Request $request,$id)
-    {   
+    {
         $requestContent = array();
         $requestContent['id'] = $id;
 
@@ -68,8 +69,8 @@ class UserController extends FOSRestController
      * @return View
      */
     public function UpdateUserDetails(Request $request,$id)
-    {   
-            
+    {
+
         parse_str($request->getContent(),$requestContent);
         $requestContent['id'] = $id;
         $respone = array();
