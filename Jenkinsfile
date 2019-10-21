@@ -13,13 +13,13 @@ pipeline {
                 sh 'rm -rf var/cache/* var/log/*'
                 sh 'git clean -df && git reset --hard'
                 sh 'rm -f .env.test'
-                sh 'echo "APP_ENV=test" >> .env.test'
-                sh 'chmod 744 .env.test'
+                sh 'echo "APP_ENV=test" >> .env.dist'
+                sh 'chmod 744 .env.dist'
                 withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
                     sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.17.0.3:3306/simplepay" >> .env.test'
                     sh 'mysql -h 172.17.0.3 -u root -p$DB_PASS -e "create database simplepay;"'
                 }
-                sh './.env.test'
+                sh './.env.dist'
                 sh 'composer install'
             }
         }

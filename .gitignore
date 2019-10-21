@@ -19,3 +19,5 @@
 ###< symfony/phpunit-bridge ###
 /.idea/*
 .env
+.env.dist
+phpunit.junit.xml
