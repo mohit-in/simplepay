@@ -6,39 +6,92 @@ namespace App\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 
 
+
 trait EntityTimestampableTrait
 {
-    /*
-       * @ORM\Column(type="datetime")
-       */
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="$created_at", type="datetime", nullable=true)
+     */
     protected $created_at;
 
-    /*
-     * @ORM\Column(type="datetime")
+    /**
+     * @var \DateTime
+     * @ORM\Column(name="$last_modified_at", type="datetime", nullable=true)
      */
     protected $last_modified_at;
 
-    public function getCreatedAt(): ?\DateTimeInterface
+
+    /**
+     * Auto set the last_modified_at value.
+     * @ORM\PreUpdate
+     */
+    public function onPreUpdate()
     {
-        return $this->created_at;
+        $this->setLastModifiedAt(new \DateTime());
     }
 
-    public function setCreatedAt()
+    /**
+     * Set initial value for created_at/last_modified_at values.
+     *
+     * @ORM\PrePersist
+     */
+    public function onPrePersist()
     {
-        $this->created_at = new \DateTime;
-
-        return $this;
+        $now = new \DateTime();
+        $this->setCreatedAt($now);
+        $this->setLastModifiedAt($now);
     }
 
-    public function getLastModifiedAt(): ?\DateTimeInterface
+
+
+    /**
+     * Get last_modified_at value
+     *
+     * @return \DateTime
+     */
+    public function getLastModifiedAt(): \DateTime
     {
         return $this->last_modified_at;
     }
 
-    public function setLastModifiedAt($last_modified_at)
+    /**
+     * Get created_at value
+     *
+     * @return \DateTime
+     */
+    public function getCreatedAt(): \DateTime
     {
-        $this->last_modified_at = new \DateTime;
+        return $this->created_at;
+    }
+
+    /**
+     * Set created_at value
+     *
+     * @param \DateTime $created_at
+     * @return EntityTimestampableTrait
+     */
+    public function setCreatedAt(\DateTime $created_at)
+    {
+        $this->created_at = $created_at;
 
         return $this;
     }
+
+    /**
+     * Set last_modified_at value
+     *
+     * @param \DateTime $last_modified_at
+     * @return EntityTimestampableTrait
+     */
+    public function setLastModifiedAt(\DateTime $last_modified_at)
+    {
+        $this->last_modified_at = $last_modified_at;
+
+        return $this;
+    }
+
+
+
+
 }

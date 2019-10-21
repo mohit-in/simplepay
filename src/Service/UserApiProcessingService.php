@@ -20,13 +20,13 @@ class UserApiProcessingService extends BaseService
     public function processCreateUserRequest($requestContent)
     {   
         /* Checking user is already present or not by this email */
-        $userRepository = $this->entityManager->getRepository('App:User');
-        $user = $userRepository->findOneByEmail($requestContent['email']);
+        //$userRepository = $this->entityManager->getRepository('App:User');
+        //$user = $userRepository->findOneByEmail($requestContent['email']);
         
-        if($user) {
-
-            throw new HttpException(409,"User already present by ".$requestContent['email']." email");
-        }
+//        if($user) {
+//
+//            throw new HttpException(409,"User already present by ".$requestContent['email']." email");
+//        }
 
         $user = new User();
         $user->setEmail($requestContent['email']);
@@ -34,8 +34,8 @@ class UserApiProcessingService extends BaseService
         $user->setMobile($requestContent['mobile']);
         $user->setPassword($requestContent['password']);
         $user->setStatus($requestContent['status']);
-        $user->setCreatedAt(new \Datetime());
-        $user->setLastModifiedAt(new \Datetime());
+        #$user->setCreatedAt(new \Datetime());
+        #$user->setLastModifiedAt(new \Datetime());
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
