@@ -16,7 +16,7 @@ pipeline {
                 sh 'echo "APP_ENV=test" >> .env.dist'
                 sh 'chmod 744 .env.dist'
                 withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
-                    sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.17.0.3:3306/simplepay" >> .env.test'
+                    sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.17.0.3:3306/simplepay" >> .env.dist'
                     sh 'mysql -h 172.17.0.3 -u root -p$DB_PASS -e "create database simplepay;"'
                 }
                 sh './.env.dist'
