@@ -5,22 +5,19 @@ namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
-
 trait EntityTimestampableTrait
 {
     /**
      * @var \DateTime
-     * @ORM\Column(name="$created_at", type="datetime", nullable=true)
+     * @ORM\Column(name="created_at", type="datetime", nullable=true)
      */
     protected $created_at;
 
     /**
      * @var \DateTime
-     * @ORM\Column(name="$last_modified_at", type="datetime", nullable=true)
+     * @ORM\Column(name="last_modified_at", type="datetime", nullable=true)
      */
     protected $last_modified_at;
-
 
     /**
      * Auto set the last_modified_at value.
@@ -69,7 +66,7 @@ trait EntityTimestampableTrait
      * Set created_at value
      *
      * @param \DateTime $created_at
-     * @return EntityTimestampableTrait
+     * @return $this
      */
     public function setCreatedAt(\DateTime $created_at)
     {
@@ -82,7 +79,7 @@ trait EntityTimestampableTrait
      * Set last_modified_at value
      *
      * @param \DateTime $last_modified_at
-     * @return EntityTimestampableTrait
+     * @return $this
      */
     public function setLastModifiedAt(\DateTime $last_modified_at)
     {

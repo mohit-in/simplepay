@@ -2,6 +2,8 @@
 
 namespace App\Controller\API\V1\User;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController; 
 use Symfony\Component\HttpFoundation\Request;
@@ -9,12 +11,14 @@ use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\View\View;
 
 class UserController extends FOSRestController
-{ 
+{
     /**
      * Function to handle User Create API request
      * @Rest\Post("/")
      * @param Request $request
      * @return View
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function createUser(Request $request)
     {   
@@ -25,7 +29,6 @@ class UserController extends FOSRestController
                         ->processCreateUserRequest($requestContent);
 
         return View::create($response, Response::HTTP_CREATED);
-
     }
 
     /**
@@ -52,6 +55,8 @@ class UserController extends FOSRestController
      * @param Request $request
      * @param $id
      * @return View
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function deleteUser(Request $request,$id)
     {   
@@ -61,7 +66,7 @@ class UserController extends FOSRestController
         $response = $this->container
                         ->get('user_api_processing_service')
                         ->processDeleteUserRequest($requestContent);
-        return View::create($response, Response::HTTP_OK);
+        return View::create($response, Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -70,6 +75,8 @@ class UserController extends FOSRestController
      * @param Request $request
      * @param $id
      * @return View
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function UpdateUserDetails(Request $request,$id)
     {   
@@ -79,6 +86,6 @@ class UserController extends FOSRestController
         $response = $this->container
                         ->get('user_api_processing_service')
                         ->processUpdateUserRequest($requestContent);
-        return View::create($response, Response::HTTP_OK);
+        return View::create($response, Response::HTTP_NO_CONTENT);
     }
 }
