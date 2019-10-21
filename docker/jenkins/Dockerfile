@@ -22,7 +22,6 @@ RUN apt-get update \
      zip \
      unzip
 
-     
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
   && docker-php-ext-configure opcache --enable-opcache \
   && pecl install memcached \
