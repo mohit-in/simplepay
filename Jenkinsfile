@@ -12,7 +12,7 @@ pipeline {
                 }
                 sh 'rm -rf var/cache/* var/log/*'
                 sh 'git clean -df && git reset --hard'
-                sh 'rm -f .env.test'
+                sh 'rm -f .env.dist'
                 sh 'echo "APP_ENV=test" >> .env.dist'
                 sh 'chmod 744 .env.dist'
                 withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
