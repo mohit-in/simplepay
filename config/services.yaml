@@ -23,5 +23,10 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    user_api_processing_service:
+      class: App\Service\UserApiProcessingService
+      public: true
+      calls:
+          - [ setEntityManager, ["@doctrine.orm.entity_manager"] ]
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -1,0 +1,15 @@
+fos_rest:
+    format_listener: 
+        rules: 
+            - {path: '^', priorities: ['json'], fallback_format: json}
+    exception:
+        enabled: true
+    view:
+        view_response_listener: 'force'
+        formats:
+            json: true
+    body_converter:
+        enabled: true
+        validate: true
+        validation_errors_argument: validationErrors
+    
