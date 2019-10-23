@@ -1,7 +1,9 @@
 default:
     suites:
         default:
+            paths:
+               features: %behat.paths.features%
             contexts:
-                - App\Tests\Behat\DemoContext
+                - App\Tests\Scenario\Context\APIContext
     extensions:
-        FriendsOfBehat\SymfonyExtension: null
+        FriendsOfBehat\SymfonyExtension: ~
