@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Tests\Repository;
+namespace App\Tests\Unit;
 
 use App\Repository\UserRepository;
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
-	public function testFindByEmail($email)
+	public function testFindByEmail()
    	{
-   		$userRepository = new UserRepository();
+
     }
 }
