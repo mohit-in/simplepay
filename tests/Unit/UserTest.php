@@ -14,7 +14,6 @@ class UserTest extends KernelTestCase
      */
     private $entityManager;
 
-
     protected function setUp()
     {
         $kernel = self::bootKernel();
@@ -22,23 +21,23 @@ class UserTest extends KernelTestCase
         $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
-    }
 
+        $this->entityManager->getConnection()->executeQuery("DELETE FROM user where email = 'mohit@gmail.com'");
+        $this->entityManager->getConnection()->executeQuery("INSERT INTO user(name,mobile,email,password,status) values('mohit','9999345816','mohit@gmail.com','123','active')");
+        #$this->entityManager->beginTransaction();
+    }
+    /* Function to test FindByEmail funtion of UserRepository*/
     public function testFindByEmail()
     {
-        $user = $this->entityManager
-            ->getRepository(User::class)
+        $users = $this->entityManager
+           ->getRepository(User::class)
             ->findByEmail("mohit@gmail.com");
-
-        dump($user[0]['name']);exit;
-        $this->assertSame(9999345816, $user['mobile']);
+        $this->assertSame("mohit", $users[0]->getName());
     }
-
-
     protected function tearDown()
     {
         parent::tearDown();
-        // doing this is recommended to avoid memory leaks
+        #$this->entityManager->rollback();
         $this->entityManager->close();
         $this->entityManager = null;
     }
