@@ -4,11 +4,13 @@ namespace App\Controller\API\V1\User;
 
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\FOSRestController; 
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\View\View;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\View\View;
 
 class UserController extends FOSRestController
 {
@@ -21,12 +23,12 @@ class UserController extends FOSRestController
      * @throws OptimisticLockException
      */
     public function createUser(Request $request)
-    {   
+    {
         $requestContent = $request->request->all();
 
         $response = $this->container
-                        ->get('user_api_processing_service')
-                        ->processCreateUserRequest($requestContent);
+            ->get('user_api_processing_service')
+            ->processCreateUserRequest($requestContent);
 
         return View::create($response, Response::HTTP_CREATED);
     }
@@ -38,14 +40,14 @@ class UserController extends FOSRestController
      * @param $id
      * @return View
      */
-    public function getUserDetails(Request $request,$id)
-    {   
+    public function getUserDetails(Request $request, $id)
+    {
         $requestContent = array();
         $requestContent['id'] = $id;
 
         $respone = $this->container
-                        ->get('user_api_processing_service')
-                        ->processgetUserDetailsRequest($requestContent);
+            ->get('user_api_processing_service')
+            ->processgetUserDetailsRequest($requestContent);
         return View::create($respone, Response::HTTP_OK);
     }
 
@@ -58,14 +60,14 @@ class UserController extends FOSRestController
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function deleteUser(Request $request,$id)
-    {   
+    public function deleteUser(Request $request, $id)
+    {
         $requestContent = array();
         $requestContent['id'] = $id;
 
         $response = $this->container
-                        ->get('user_api_processing_service')
-                        ->processDeleteUserRequest($requestContent);
+            ->get('user_api_processing_service')
+            ->processDeleteUserRequest($requestContent);
         return View::create($response, Response::HTTP_NO_CONTENT);
     }
 
@@ -78,14 +80,15 @@ class UserController extends FOSRestController
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function UpdateUserDetails(Request $request,$id)
-    {   
-            
-        parse_str($request->getContent(),$requestContent);
+    public function UpdateUserDetails(Request $request, $id)
+    {
+
+        $requestContent = $request->request->all();
         $requestContent['id'] = $id;
+
         $response = $this->container
-                        ->get('user_api_processing_service')
-                        ->processUpdateUserRequest($requestContent);
+            ->get('user_api_processing_service')
+            ->processUpdateUserRequest($requestContent);
         return View::create($response, Response::HTTP_NO_CONTENT);
     }
 }

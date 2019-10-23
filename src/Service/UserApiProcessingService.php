@@ -34,8 +34,8 @@ class UserApiProcessingService extends BaseService
         $user->setMobile($requestContent['mobile']);
         $user->setPassword($requestContent['password']);
         $user->setStatus($requestContent['status']);
-        $userRepository->save($user);
-        $userRepository->commit($user);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush($user);
         return $user;
     }
 

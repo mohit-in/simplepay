@@ -1,7 +1,12 @@
 services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
+  _defaults:
+    autowire: true
+    autoconfigure: true
 
-    App\Tests\Scenario\:
-        resource: '../tests/Scenario/*'
+  App\Tests\Scenario\Context\APIContext:
+    public: true
+    arguments:
+      - http://localhost:8000/v1
+      - "@service_container"
+
+
