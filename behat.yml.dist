@@ -1,9 +1,10 @@
 default:
-    suites:
-        default:
-            paths:
-               features: %behat.paths.features%
-            contexts:
-                - App\Tests\Scenario\Context\APIContext
-    extensions:
-        FriendsOfBehat\SymfonyExtension: ~
+  suites:
+    default:
+      paths:
+        features: '%paths.base%/tests/Scenario/Features'
+      contexts:
+        - App\Tests\Scenario\Context\APIContext:
+            - http://localhost:8000/
+  extensions:
+    FriendsOfBehat\SymfonyExtension: ~
