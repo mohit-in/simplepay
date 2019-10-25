@@ -28,7 +28,8 @@
         "symfony/yaml": "4.3.*"
     },
     "require-dev": {
-      "ext-json": "*"
+        "ext-json": "*",
+        "phpspec/phpspec": "^6.0"
     },
     "config": {
         "preferred-install": {

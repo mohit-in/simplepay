@@ -24,7 +24,6 @@ class UserApiProcessingService extends BaseService
         $user = $userRepository->findOneByEmail($requestContent['email']);
         
         if($user) {
-
             throw new HttpException(409,"User already present by ".$requestContent['email']." email");
         }
 
