@@ -17,8 +17,8 @@ class User
     use EntityTimestampableTrait;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\Length(max=255)
+     * @ORM\Column(type="string", length=256)
+     * @Assert\Length(max=256)
      * @Assert\NotNull()
      */
     private $name;
