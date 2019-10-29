@@ -4,14 +4,13 @@
  *  This Service class should be extended as parent Service to the custom Application Service.
  *
  *  @category Service
- *  @author Ashish Kumar<ashish.k@mindfiresolutions.com>
  */
 
 namespace App\Service;
 
-use App\Entity\User;
 use Doctrine\ORM\EntityManager;
-abstract class BaseService
+
+class BaseService
 {
     
     /**
