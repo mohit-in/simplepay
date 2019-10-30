@@ -58,6 +58,8 @@ class UserApiProcessingService
     public function processDeleteUserRequest($requestContent) {
 
         $user = $this->userRepository->find($requestContent['id']);
+
+
         if(!$user) {
 
             throw new HttpException(404,"user not found by id: ". $requestContent['id']);

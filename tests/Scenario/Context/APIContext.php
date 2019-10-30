@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\HttpFoundation\Response;
 use GuzzleHttp\Exception\RequestException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Class APIContext

@@ -47,7 +47,6 @@ class UserController extends FOSRestController
         $envelope = $this->messageBus->dispatch(new SaveUserCommand($request->request->all()));
         $handled = $envelope->last(HandledStamp::class);
         $response = $handled->getResult();
-
         return View::create($response, Response::HTTP_CREATED);
     }
 
@@ -82,6 +81,7 @@ class UserController extends FOSRestController
         $response = $this->container
             ->get('user_api_processing_service')
             ->processgetUserDetailsRequest($requestContent);
+        #print_r($response);exit;
         return View::create($response, Response::HTTP_OK);
     }
 
