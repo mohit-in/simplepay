@@ -2,8 +2,10 @@
 
 namespace App\Controller\API\V1\User;
 
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
+
 use FOS\RestBundle\View\View;
 
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -33,13 +35,13 @@ class UserController extends FOSRestController
     {
         $this->messageBus = $messageBus;
     }
-
     /**
      * Function to handle User Create API request
      * @Rest\Post("/")
      * @param Request $request
      * @return View
      */
+
     public function RegisterUser(Request $request)
     {
         $envelope = $this->messageBus->dispatch(new SaveUserCommand($request->request->all()));

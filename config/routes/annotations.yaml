@@ -2,10 +2,10 @@ v1_user:
     resource: ../../src/Controller/API/V1/User
     type: annotation
     prefix: v1/user
-v1_transaction:
-    resource: ../../src/Controller/API/V1/Transaction
-    type: annotation
-    prefix: v1/transaction
+#v1_transaction:
+#    resource: ../../src/Controller/API/V1/Transaction
+#    type: annotation
+#    prefix: v1/transaction
 # v2_user:
 #     resource: ../../src/Controller/API/V2/User
 #     type: annotation
@@ -13,4 +13,4 @@ v1_transaction:
 # v2_transaction:
 #     resource: ../../src/Controller/API/V2/Transaction
 #     type: annotation
-#     prefix: v2/transaction         
+#     prefix: v2/transaction

@@ -8,7 +8,7 @@
         "friends-of-behat/symfony-extension": "^2.0",
         "friendsofsymfony/rest-bundle": "^2.5",
         "guzzlehttp/guzzle": "^6.3",
-        "jms/serializer-bundle": "^3.4",
+        "jms/serializer-bundle": "^2.4",
         "ramsey/uuid": "^3.8",
         "ramsey/uuid-doctrine": "^1.5",
         "sensio/framework-extra-bundle": "^5.4",
@@ -21,7 +21,6 @@
         "symfony/maker-bundle": "^1.13",
         "symfony/messenger": "4.3.*",
         "symfony/orm-pack": "^1.0",
-        "symfony/phpunit-bridge": "^4.3",
         "symfony/validator": "4.3.*",
         "symfony/var-dumper": "4.3.*",
         "symfony/web-server-bundle": "4.3.*",
@@ -29,7 +28,8 @@
     },
     "require-dev": {
         "ext-json": "*",
-        "phpspec/phpspec": "^6.0"
+        "phpspec/phpspec": "^6.0",
+        "symfony/phpunit-bridge": "^4.3"
     },
     "config": {
         "preferred-install": {

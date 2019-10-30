@@ -171,6 +171,9 @@
     "jms/metadata": {
         "version": "2.1.0"
     },
+    "jms/parser-lib": {
+        "version": "1.0.0"
+    },
     "jms/serializer": {
         "version": "3.3.0"
     },
@@ -197,23 +200,11 @@
     "ocramius/proxy-manager": {
         "version": "2.2.3"
     },
-    "phpdocumentor/reflection-common": {
-        "version": "2.0.0"
+    "phpcollection/phpcollection": {
+        "version": "0.5.0"
     },
-    "phpdocumentor/reflection-docblock": {
-        "version": "4.3.2"
-    },
-    "phpdocumentor/type-resolver": {
-        "version": "1.0.1"
-    },
-    "phpspec/php-diff": {
-        "version": "v1.1.0"
-    },
-    "phpspec/phpspec": {
-        "version": "6.0.0"
-    },
-    "phpspec/prophecy": {
-        "version": "1.9.0"
+    "phpoption/phpoption": {
+        "version": "1.5.0"
     },
     "psr/cache": {
         "version": "1.0.1"
