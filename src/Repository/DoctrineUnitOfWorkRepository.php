@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
  * Class DoctrineUnitOfWorkRepository
  * @package App\Repository
  */
-final class DoctrineUnitOfWorkRepository
+class DoctrineUnitOfWorkRepository
 {
     /**
      * @var EntityManagerInterface

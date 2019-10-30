@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\MessageHandler\Traits;
+namespace App\Traits;
 
 
 use App\Repository\DoctrineUnitOfWorkRepository;

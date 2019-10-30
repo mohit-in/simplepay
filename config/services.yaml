@@ -27,9 +27,14 @@ services:
         resource: '../src/MessageHandler'
         tags: ['messenger.message_handler','controller.service_arguments']
 
+#    App\Repository\:
+#        resource: '../src/Repository'
+
     user_api_processing_service:
-        class:
-
-
+        class: App\Service\UserApiProcessingService
+#        arguments:
+#            $userRepository: 'App\Repository\UserRepository'
+#            $unitOfWork: 'App\Repository\DoctrineUnitOfWorkRepository'
+        public: true
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

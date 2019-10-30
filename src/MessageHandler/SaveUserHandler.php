@@ -5,8 +5,8 @@ namespace App\MessageHandler;
 
 use App\Entity\User;
 use App\Message\SaveUserCommand;
-use \App\MessageHandler\Traits\DoctrineUnitOfWorkTrait;
 
+use App\Traits\DoctrineUnitOfWorkTrait;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
