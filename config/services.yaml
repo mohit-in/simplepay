@@ -27,14 +27,9 @@ services:
         resource: '../src/MessageHandler'
         tags: ['messenger.message_handler','controller.service_arguments']
 
-    App\EventListener\ExceptionListener:
-        tags:
-            - { name: kernel.event_listener, event: kernel.exception }
+    user_api_processing_service:
+        class:
 
-    exception_normalizer:
-        class: App\Normalizer\ExceptionNormalizer
-        tags:
-            - { name: serializer.normalizer }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\MessageHandler;
+namespace App\MessageHandler\Traits;
 
 
 use App\Repository\DoctrineUnitOfWorkRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
-trait DoctrineTrait
+trait DoctrineUnitOfWorkTrait
 {
     private $entityManager;
     /**

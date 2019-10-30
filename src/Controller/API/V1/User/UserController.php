@@ -2,28 +2,23 @@
 
 namespace App\Controller\API\V1\User;
 
-use App\Message\DeleteUserAccountCommand;
-use App\Message\GetUserDetailsCommand;
-use App\Message\RegisterUserCommand;
-use App\Message\UpdateUserDetailsCommand;
-
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\AbstractFOSRestController;
+use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
+
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
+use App\Message\SaveUserCommand;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 /**
  * Class UserController
  * @package App\Controller\API\V1\User
  */
-class UserController extends AbstractFOSRestController
+class UserController extends FOSRestController
 {
     /**
      * @var MessageBusInterface
@@ -47,7 +42,7 @@ class UserController extends AbstractFOSRestController
      */
     public function RegisterUser(Request $request)
     {
-        $envelope = $this->messageBus->dispatch(new RegisterUserCommand($request->request->all()));
+        $envelope = $this->messageBus->dispatch(new SaveUserCommand($request->request->all()));
         $handled = $envelope->last(HandledStamp::class);
         $response = $handled->getResult();
 
@@ -64,8 +59,8 @@ class UserController extends AbstractFOSRestController
     public function UpdateUserDetails(Request $request, $id)
     {
         $requestContent = $request->request->all();
-        $name = $requestContent['name']??'';
-        $envelope = $this->messageBus->dispatch(new UpdateUserDetailsCommand($id,$name));
+        $requestContent['id'] = $id;
+        $envelope = $this->messageBus->dispatch(new SaveUserCommand($requestContent));
         $handled = $envelope->last(HandledStamp::class);
         $response = $handled->getResult();
 
