@@ -4,6 +4,14 @@ fos_rest:
             - {path: '^', priorities: ['json'], fallback_format: json}
     exception:
         enabled: true
+        codes:
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': 404
+
+            'Symfony\Component\HttpKernel\Exception\ConflictHttpException': 409
+        messages:
+            'Symfony\Component\Routing\Exception\ResourceNotFoundException': true
+            'Symfony\Component\HttpKernel\Exception\HttpException': true
+            'Symfony\Component\HttpKernel\Exception\ConflictHttpException': true
     view:
         view_response_listener: 'force'
         formats:

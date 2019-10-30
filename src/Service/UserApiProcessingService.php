@@ -3,24 +3,40 @@
 namespace App\Service;
 
 use App\Entity\User;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class UserApiProcessingService extends BaseService
+class UserApiProcessingService
 {
     /**
+     * UserApiProcessingService constructor.
+     * @param EntityManager $entityManager
+     * @param UserRepository $userRepository
+     */
+    private $entityManager;
+    private $userRepository;
+    public function __construct(EntityManager $entityManager,UserRepository $userRepository)
+    {
+        $this->entityManager=$entityManager;
+        $this->userRepository=$userRepository;
+    }
+
+    /**x
      *  Function to process User Create API request.
      *
      * @param array $requestContent
+     * @param UserRepository $userRepository
      * @return array
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function processCreateUserRequest($requestContent)
+    public function processCreateUserRequest($requestContent,UserRepository $userRepository)
     {   
         /* Checking user is already present or not by this email */
-        $userRepository = $this->entityManager->getRepository('App:User');
+        #$userRepository = $this->entityManager->getRepository('App:User');
         $user = $userRepository->findOneByEmail($requestContent['email']);
         
         if($user) {

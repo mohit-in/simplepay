@@ -6,11 +6,10 @@ namespace App\Tests\Scenario\Context;
 use App\Tests\Scenario\Traits\UserTrait;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\HttpFoundation\Response;
-
+use GuzzleHttp\Exception\RequestException;
 
 /**
  * Class APIContext
@@ -79,15 +78,22 @@ class APIContext implements Context
     {
         $httpMethod = strtoupper($httpMethod);
         $urlPrefix = "v1";
+        try {
+            $client = new Client([
+                'base_uri' => $this->baseUrl
+            ]);
+            $this->response = $client->request(
+                $httpMethod,
+                $urlPrefix.$requestUri,
+                ['json' => json_decode($payLoad)]
+            );
+        }
+        catch (RequestException $e) {
 
-        $client = new Client([
-            'base_uri' => $this->baseUrl
-        ]);
-        $this->response = $client->request(
-            $httpMethod,
-            $urlPrefix.$requestUri,
-            ['json' => json_decode($payLoad)]
-        );
+            if ($e->hasResponse()) {
+                $this->response = $e->getResponse();
+            }
+        }
     }
     /**
      * @Then the response code should :responseStatusCode

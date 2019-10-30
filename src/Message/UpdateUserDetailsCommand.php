@@ -13,7 +13,7 @@ class UpdateUserDetailsCommand
 {
     /**
      * @var $id
-     * @Assert\Positive("Id must be positive integer)
+     * @Assert\Positive()
      */
     private $id;
 

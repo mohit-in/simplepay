@@ -3,16 +3,15 @@ Feature: Manage Users data
 
   @CreateUser
   Scenario: User can Create own account in the system by personal details
-    #When I send a "GET" request to "/user/1"
-    #Then the response code should 404
+    When I send a "GET" request to "/user/1"
+    Then the response code should 404
     When I send a "POST" request to "/user/" with data
       """
       {
         "name": "mohit",
         "email": "mohit@gmail.com",
         "mobile": "99999345816",
-        "status": "active",
-        "password": "123"
+        "password": "123456"
       }
       """
     Then the response code should "201"
@@ -48,5 +47,5 @@ Feature: Manage Users data
     Then the response code should "200"
     When I send a "DELETE" request to "/user/1"
     Then the response code should "204"
-    #When I send a "GET" request to "/user/1"
-    #Then the response code should "404"
+    When I send a "GET" request to "/user/1"
+    Then the response code should "404"

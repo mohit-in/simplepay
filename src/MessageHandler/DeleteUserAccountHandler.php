@@ -15,7 +15,7 @@ class DeleteUserAccountHandler
         $userRepository = $this->entityManager->getRepository('App:User');
         $user = $userRepository->find($command->getId());
         if(!$user) {
-            throw new HttpException(404,"User not found by ".$command->getId()." id");
+            throw new HttpException(404,"user not found by id: ".$command->getId());
         }
         $this->unitOfWork->remove($user);
         $this->unitOfWork->commit();

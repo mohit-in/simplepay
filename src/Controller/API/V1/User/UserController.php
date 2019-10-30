@@ -7,8 +7,10 @@ use App\Message\GetUserDetailsCommand;
 use App\Message\RegisterUserCommand;
 use App\Message\UpdateUserDetailsCommand;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\View\View;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +23,7 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
  * Class UserController
  * @package App\Controller\API\V1\User
  */
-class UserController extends FOSRestController
+class UserController extends AbstractFOSRestController
 {
     /**
      * @var MessageBusInterface
@@ -45,19 +47,31 @@ class UserController extends FOSRestController
      */
     public function RegisterUser(Request $request)
     {
-        $requestContent = $request->request->All();
-        $name = $requestContent['name']??'';
-        $email = $requestContent['email']??'';
-        $mobile = $requestContent['mobile']??'';
-        $password = $requestContent['password']??'';
-
-        $envelope = $this->messageBus->dispatch(new RegisterUserCommand($name,$email,$mobile,$password));
+        $envelope = $this->messageBus->dispatch(new RegisterUserCommand($request->request->all()));
         $handled = $envelope->last(HandledStamp::class);
         $response = $handled->getResult();
 
         return View::create($response, Response::HTTP_CREATED);
-
     }
+
+    /**
+     * Function to handle User Update API request
+     * @Rest\Patch("/{id}")
+     * @param Request $request
+     * @param $id
+     * @return View
+     */
+    public function UpdateUserDetails(Request $request, $id)
+    {
+        $requestContent = $request->request->all();
+        $name = $requestContent['name']??'';
+        $envelope = $this->messageBus->dispatch(new UpdateUserDetailsCommand($id,$name));
+        $handled = $envelope->last(HandledStamp::class);
+        $response = $handled->getResult();
+
+        return View::create($response, Response::HTTP_NO_CONTENT);
+    }
+
     /**
      * Function to GET the details of user by using user id.
      * @Rest\Get("/{id}")
@@ -67,9 +81,10 @@ class UserController extends FOSRestController
      */
     public function getUserDetails(Request $request, $id)
     {
-        $envelope = $this->messageBus->dispatch(new GetUserDetailsCommand($id));
-        $handled = $envelope->last(HandledStamp::class);
-        $response = $handled->getResult();
+        $requestContent['id'] = $id;
+        $response = $this->container
+            ->get('user_api_processing_service')
+            ->processgetUserDetailsRequest($requestContent);
         return View::create($response, Response::HTTP_OK);
     }
 
@@ -82,28 +97,11 @@ class UserController extends FOSRestController
      */
     public function deleteUser(Request $request, $id)
     {
-        $envelope = $this->messageBus->dispatch(new DeleteUserAccountCommand($id));
-        $handled = $envelope->last(HandledStamp::class);
-        $response = $handled->getResult();
+        $requestContent['id'] = $id;
 
-        return View::create($response, Response::HTTP_NO_CONTENT);
-    }
-
-    /**
-     * Function to handle User Update API request
-     * @Rest\Patch("/{id}")
-     * @param Request $request
-     * @param $id
-     * @return View
-     */
-    public function UpdateUserDetails(Request $request, $id)
-    {
-        $name = $requestContent['name']??'';
-
-        $envelope = $this->messageBus->dispatch(new UpdateUserDetailsCommand($id,$name));
-        $handled = $envelope->last(HandledStamp::class);
-        $response = $handled->getResult();
-
+        $response = $this->container
+            ->get('user_api_processing_service')
+            ->processDeleteUserRequest($requestContent);
         return View::create($response, Response::HTTP_NO_CONTENT);
     }
 }

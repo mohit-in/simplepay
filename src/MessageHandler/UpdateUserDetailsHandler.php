@@ -16,10 +16,10 @@ class UpdateUserDetailsHandler
         $user = $userRepository->find($command->getId());
 
         if(!$user) {
-            throw new HttpException(404,"User not found by ". $command->getId()." id");
+            throw new HttpException(404,"user not found by id: ". $command->getId());
         }
-
         if(!empty($command->getName())) {
+
             $user->setName($command->getName());
         }
 

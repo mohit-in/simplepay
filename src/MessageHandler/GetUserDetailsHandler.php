@@ -16,7 +16,7 @@ final class GetUserDetailsHandler
         $user = $userRepository->find($command->getId());
         if(!$user) {
 
-            throw new HttpException(409,"user not found by id: ". $command->getId());
+            throw new HttpException(404,"user not found by id: ". $command->getId());
         }
         return $user;
     }

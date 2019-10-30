@@ -6,107 +6,80 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class RegisterUserCommand
 {
     /**
-     * @Assert\NotBlank()
-     * @Assert\NotNull()
+     * @Assert\NotNull(message="Name must not be empty")
      */
      private $name;
 
     /**
-     * @Assert\NotBlank()
-     * @Assert\NotNull()
-     * @Assert\Email()
+     * @Assert\Email(message="Email must be valid")
      */
     private $email;
 
     /**
-     * @Assert\NotBlank()
-     * @Assert\NotNull()
+     * @Assert\NotNull(message="Mobile must not be empty")
      */
     private $mobile;
 
     /**
-     * @Assert\NotBlank(message="Please enter a clever nickname")
-     * @Assert\Length(min=6)
+     * @Assert\Length(min=6,minMessage="Password must be greater than or equal to 6 digit in length")
      */
     private $password;
 
     /**
      * CreateUserMessage constructor.
-     * @param $name
-     * @param $email
-     * @param $mobile
-     * @param $password
+     * $
+     * @param $requestParameter
      */
-    public function __construct($name, $email, $mobile, $password)
+    public function __construct($requestParameter)
     {
-        $this->name = $name;
-        $this->email = $email;
-        $this->mobile = $mobile;
-        $this->password = $password;
+        if(!empty($requestParameter['name'])) {
+
+            $this->name = $requestParameter['name'];
+        }
+        if(!empty($requestParameter['email'])) {
+
+            $this->email = $requestParameter['email'];
+        }
+        if(!empty($requestParameter['password'])) {
+
+            $this->password = $requestParameter['password'];
+        }
+        if(!empty($requestParameter['mobile'])){
+
+            $this->password = $requestParameter['mobile'];
+        }
     }
 
-
     /**
-     * @return mixed
+     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param mixed $name
+     * @return string
      */
-    public function setName($name): void
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
     /**
-     * @param mixed $email
+     * @return string
      */
-    public function setEmail($email): void
-    {
-        $this->email = $email;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getMobile()
+    public function getMobile(): string
     {
         return $this->mobile;
     }
 
     /**
-     * @param mixed $mobile
+     * @return string
      */
-    public function setMobile($mobile): void
-    {
-        $this->mobile = $mobile;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
 
-    /**
-     * @param mixed $password
-     */
-    public function setPassword($password): void
-    {
-        $this->password = $password;
-    }
 }

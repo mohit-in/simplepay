@@ -42,43 +42,7 @@ class UserControllerTemp extends FOSRestController
         return View::create($response, Response::HTTP_CREATED);
     }
 
-    /**
-     * Function to GET the details of user by using user id.
-     * @Rest\Get("/{id}")
-     * @param Request $request
-     * @param $id
-     * @return View
-     */
-    public function getUserDetails(Request $request, $id)
-    {
-        $requestContent = array();
-        $requestContent['id'] = $id;
 
-        $respone = $this->container
-            ->get('user_api_processing_service')
-            ->processgetUserDetailsRequest($requestContent);
-        return View::create($respone, Response::HTTP_OK);
-    }
-
-    /**
-     * Function to handle User Delete API request
-     * @Rest\Delete("/{id}")
-     * @param Request $request
-     * @param $id
-     * @return View
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
-    public function deleteUser(Request $request, $id)
-    {
-        $requestContent = array();
-        $requestContent['id'] = $id;
-
-        $response = $this->container
-            ->get('user_api_processing_service')
-            ->processDeleteUserRequest($requestContent);
-        return View::create($response, Response::HTTP_NO_CONTENT);
-    }
 
     /**
      * Function to handle User Update API request
