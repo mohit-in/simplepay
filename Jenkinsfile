@@ -16,8 +16,8 @@ pipeline {
                 sh 'echo "APP_ENV=test" >> .env.dist'
                 sh 'chmod 744 .env.dist'
                 withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
-                    sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.18.0.2:3306/simplepay" >> .env.dist'
-                    sh 'mysql -h 172.18.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
+                    sh 'echo "DATABASE_URL=mysql://jenkins:$DB_PASS@172.18.0.2:3306/simplepay" >> .env.dist'
+                    sh 'mysql -h 172.18.0.2 -u jenkins -p$DB_PASS -e "create database simplepay;"'
                 }
                 sh './.env.dist'
                 sh 'composer install'
@@ -26,6 +26,7 @@ pipeline {
         stage('test') {
             steps {
                 sh 'bin/console cache:warmup --env=test'
+                sh 'bin/console doctrine:migrations:migrate'
                 sh 'php -d memory_limit=-1 bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
             }
         }
@@ -33,7 +34,7 @@ pipeline {
     post {
         always {
             withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
-                sh 'mysql -h 172.18.0.2 -u root -p$DB_PASS -e "drop database simplepay;"'
+                sh 'mysql -h 172.18.0.2 -u jenkins -p$DB_PASS -e "drop database simplepay;"'
             }
         }
         success {
