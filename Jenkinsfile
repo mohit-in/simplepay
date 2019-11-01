@@ -17,7 +17,7 @@ pipeline {
                 sh 'chmod 744 .env.dist'
                 withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
                     sh 'echo "DATABASE_URL=mysql://jenkins:$DB_PASS@172.18.0.2:3306/simplepay" >> .env.dist'
-                    sh 'mysql -h 172.18.0.2 -u jenkins -P 3306 -p$DB_PASS -e "create database simplepay;"'
+                    sh "mysql -u jenkins --host=172.18.0.2 --port=3306 --protocol=tcp --execute="create database simplepay;" --password=$DB_PASS"
                 }
                 sh './.env.dist'
                 sh 'composer install'
@@ -34,7 +34,7 @@ pipeline {
     post {
         always {
             withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
-                sh 'mysql -h 172.18.0.2 -u jenkins -P 3306 -p$DB_PASS -e "drop database simplepay;"'
+                sh "mysql -u jenkins --host=172.18.0.2 --port=3306 --protocol=tcp --execute="drop database simplepay;" --password=$DB_PASS"
             }
         }
         success {
