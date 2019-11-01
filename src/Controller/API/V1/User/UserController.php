@@ -79,7 +79,7 @@ class UserController extends FOSRestController
         $handled = $envelope->last(HandledStamp::class);
         $response = $handled->getResult();
 
-        return View::create($response, Response::HTTP_CREATED);
+        return View::create($response, Response::HTTP_NO_CONTENT);
     }
 
     /**

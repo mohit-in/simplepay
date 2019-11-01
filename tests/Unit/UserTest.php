@@ -24,7 +24,7 @@ class UserTest extends KernelTestCase
 
         $this->entityManager->getConnection()->executeQuery("DELETE FROM user where email = 'mohit@gmail.com'");
         $this->entityManager->getConnection()->executeQuery("INSERT INTO user(name,mobile,email,password,status) values('mohit','9999345816','mohit@gmail.com','123','active')");
-        $this->entityManager->getConnection()->beginTransaction();
+        #$this->entityManager->getConnection()->beginTransaction();
 
     }
     /* Function to test FindByEmail funtion of UserRepository*/
@@ -38,7 +38,7 @@ class UserTest extends KernelTestCase
     protected function tearDown()
     {
         parent::tearDown();
-        $this->entityManager->getConnection()->rollback();
+        #$this->entityManager->getConnection()->rollback();
         $this->entityManager->close();
         $this->entityManager = null;
     }

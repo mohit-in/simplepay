@@ -33,8 +33,12 @@ class UpdateUserCommand
     {
         $this->id = $id;
         $this->name = $parameters["name"];
-        $this->mobile = $parameters["mobile"];
-        $this->password = $parameters["password"];
+        if (!empty($parameters["mobile"])) {
+            $this->mobile = $parameters["mobile"];
+        }
+        if (!empty($parameters["password"])) {
+            $this->password = $parameters["password"];
+        }
     }
 
     /**
