@@ -26,7 +26,6 @@ pipeline {
         stage('test') {
             steps {
                 sh 'bin/console cache:warmup --env=test'
-                sh 'bin/console doctrine:migrations:migrate'
                 sh 'php -d memory_limit=-1 bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
             }
         }
