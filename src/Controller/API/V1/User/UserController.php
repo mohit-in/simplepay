@@ -2,18 +2,20 @@
 
 namespace App\Controller\API\V1\User;
 
-use FOS\RestBundle\Controller\AbstractFOSRestController;
+use App\Command\RegisterUserCommand;
+use App\Command\UpdateUserCommand;
+use App\Entity\User;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\FOSRestController;
-
 use FOS\RestBundle\View\View;
-
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\HandledStamp;
-use App\Message\SaveUserCommand;
-
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\ValidationFailedException;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Symfony\Component\Messenger\Stamp\ValidationStamp;
 
 
 /**
@@ -29,12 +31,14 @@ class UserController extends FOSRestController
 
     /**
      * UserController constructor.
+     *
      * @param MessageBusInterface $messageBus
      */
     public function __construct(MessageBusInterface $messageBus)
     {
         $this->messageBus = $messageBus;
     }
+
     /**
      * Function to handle User Create API request
      * @Rest\Post("/")
@@ -44,9 +48,16 @@ class UserController extends FOSRestController
 
     public function RegisterUser(Request $request)
     {
-        $envelope = $this->messageBus->dispatch(new SaveUserCommand($request->request->all()));
+        try {
+            $user = new User();
+            $envelope = $this->messageBus->dispatch(new RegisterUserCommand($user, $request->request->all()));
+        } catch (ValidationFailedException $exception) {
+            throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
+        }
+
         $handled = $envelope->last(HandledStamp::class);
         $response = $handled->getResult();
+
         return View::create($response, Response::HTTP_CREATED);
     }
 
@@ -59,13 +70,16 @@ class UserController extends FOSRestController
      */
     public function UpdateUserDetails(Request $request, $id)
     {
-        $requestContent = $request->request->all();
-        $requestContent['id'] = $id;
-        $envelope = $this->messageBus->dispatch(new SaveUserCommand($requestContent));
+        try {
+            $envelope = $this->messageBus->dispatch(new UpdateUserCommand($id, $request->request->all()));
+        } catch (ValidationFailedException $exception) {
+            throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
+        }
+
         $handled = $envelope->last(HandledStamp::class);
         $response = $handled->getResult();
 
-        return View::create($response, Response::HTTP_NO_CONTENT);
+        return View::create($response, Response::HTTP_CREATED);
     }
 
     /**
@@ -78,10 +92,12 @@ class UserController extends FOSRestController
     public function getUserDetails(Request $request, $id)
     {
         $requestContent['id'] = $id;
+
         $response = $this->container
             ->get('user_api_processing_service')
             ->processgetUserDetailsRequest($requestContent);
-        #print_r($response);exit;
+
+
         return View::create($response, Response::HTTP_OK);
     }
 
@@ -99,6 +115,7 @@ class UserController extends FOSRestController
         $response = $this->container
             ->get('user_api_processing_service')
             ->processDeleteUserRequest($requestContent);
+
         return View::create($response, Response::HTTP_NO_CONTENT);
     }
 }

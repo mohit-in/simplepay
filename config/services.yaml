@@ -23,8 +23,8 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
-    App\MessageHandler\:
-        resource: '../src/MessageHandler'
+    App\Handler\:
+        resource: '../src/Handler'
         tags: ['messenger.message_handler','controller.service_arguments']
 
 #    App\Repository\:

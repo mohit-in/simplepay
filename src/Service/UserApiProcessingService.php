@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Repository\DoctrineUnitOfWorkRepository;
 use App\Repository\UserRepository;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class UserApiProcessingService
@@ -40,12 +41,15 @@ class UserApiProcessingService
      * @param array $requestContent
      * @return object|null
      */
-    public function processGetUserDetailsRequest($requestContent) {
-
+    public function processGetUserDetailsRequest($requestContent)
+    {
         $user = $this->userRepository->find($requestContent['id']);
-        if(!$user) {
-            throw new HttpException(404,"user not found by id: ". $requestContent['id']);
+
+        if (empty($user)) {
+
+            throw new NotFoundHttpException( "user not found by id: " . $requestContent['id']);
         }
+
         return $user;
     }
 
@@ -55,14 +59,14 @@ class UserApiProcessingService
      * @param array $requestContent
      * @return object|null
      */
-    public function processDeleteUserRequest($requestContent) {
+    public function processDeleteUserRequest($requestContent)
+    {
 
         $user = $this->userRepository->find($requestContent['id']);
 
+        if (!$user) {
 
-        if(!$user) {
-
-            throw new HttpException(404,"user not found by id: ". $requestContent['id']);
+            throw new NotFoundHttpException("user not found by id: " . $requestContent['id']);
         }
 
         $this->unitOfWork->remove($user);

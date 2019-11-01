@@ -5,6 +5,6 @@ default:
         features: '%paths.base%/tests/Scenario/Features'
       contexts:
         - App\Tests\Scenario\Context\APIContext:
-            - http://localhost:8000/
+            - http://simplepay.com/v1
   extensions:
     FriendsOfBehat\SymfonyExtension: ~
