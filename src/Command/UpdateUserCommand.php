@@ -12,6 +12,30 @@ class UpdateUserCommand
      * @Assert\NotNull(message="Name must not be empty")
      */
     private $id;
+    /**
+     *
+     */
+    private $name;
+    /**
+     *
+     */
+    private $email;
+    /**
+     *
+     */
+    private $mobile;
+    /**
+     *
+     */
+    private $password;
+
+    public function __construct(int $id, array $parameters = array())
+    {
+        $this->id = $id;
+        $this->name = $parameters["name"];
+        $this->mobile = $parameters["mobile"];
+        $this->password = $parameters["password"];
+    }
 
     /**
      * @return int
@@ -51,33 +75,5 @@ class UpdateUserCommand
     public function getPassword()
     {
         return $this->password;
-    }
-
-    /**
-     *
-     */
-    private $name;
-
-    /**
-     *
-     */
-    private $email;
-
-    /**
-     *
-     */
-    private $mobile;
-
-    /**
-     *
-     */
-    private $password;
-
-    public function __construct(int $id,  array $parameters = array())
-    {
-        $this->id = $id;
-        $this->name = $parameters["name"];
-        $this->mobile = $parameters["mobile"];
-        $this->password = $parameters["password"];
     }
 }

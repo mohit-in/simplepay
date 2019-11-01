@@ -1,15 +1,15 @@
 <?php
 
-namespace spec\App\MessageHandler;
+namespace spec\App\Handler;
 
+use App\Command\RegisterUserCommand;
+use App\Command\UpdateUserCommand;
 use App\Entity\User;
-use App\Command\SaveUserCommand;
 use App\Handler\SaveUserHandler;
 use App\Repository\DoctrineUnitOfWorkRepository;
 use App\Repository\UserRepository;
 use PhpSpec\ObjectBehavior;
 use PhpSpec\Wrapper\Collaborator;
-use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -45,13 +45,13 @@ class SaveUserHandlerSpec extends ObjectBehavior
      * Function to check success behavior of register user command.
      *
      * @param UserRepository|Collaborator $userRepository
-     * @param SaveUserCommand|Collaborator $command
+     * @param RegisterUserCommand $command
      * @param User|Collaborator $user
      * @param DoctrineUnitOfWorkRepository|Collaborator $unitOfWork
      */
     function it_check_success_behavior_of_register_user_command(
         UserRepository $userRepository,
-        SaveUserCommand $command,
+        RegisterUserCommand $command,
         User $user,
         DoctrineUnitOfWorkRepository $unitOfWork
     )
@@ -61,16 +61,7 @@ class SaveUserHandlerSpec extends ObjectBehavior
 
         $userRepository->findOneByEmail("mohit@gmail.com")->shouldBeCalled()->willReturn();
 
-        $command->getName()->shouldBeCalled()->willReturn("mohit");
-        $user->setName("mohit")->shouldBeCalled();
-        $command->getEmail()->shouldBeCalled()->willReturn("mohit@gmail.com");
-        $user->setEmail("mohit@gmail.com")->shouldBeCalled();
-        $command->getMobile()->shouldBeCalled()->willReturn("9999345816");
-        $user->setMobile("9999345816")->shouldBeCalled();
-        $command->getPassword()->shouldBeCalled()->willReturn("123456");
-        $user->setPassword("123456")->shouldBeCalled();
-        $command->getStatus()->shouldBeCalled()->willReturn();
-        $user->setStatus(Argument::any())->shouldNotBeCalled();
+        $command->getUser()->shouldBeCalled()->willReturn($user);
 
         $unitOfWork->save($user)->shouldBeCalled();
         $unitOfWork->commit()->shouldBeCalled();
@@ -84,15 +75,16 @@ class SaveUserHandlerSpec extends ObjectBehavior
      * in case of user already present in system by same email.
      *
      * @param UserRepository|Collaborator $userRepository
-     * @param SaveUserCommand|Collaborator $command
+     * @param RegisterUserCommand|Collaborator $command
      * @param User|Collaborator $user
      */
     function it_check_throw_exception_behavior_of_register_user_command(
         UserRepository $userRepository,
-        SaveUserCommand $command,
+        RegisterUserCommand $command,
         User $user
     )
     {
+
         $command->getId()->shouldBeCalled()->willReturn();
         $command->getEmail()->willReturn("mohit@gmail.com");
 
@@ -111,7 +103,7 @@ class SaveUserHandlerSpec extends ObjectBehavior
      */
     function it_check_success_behavior_of_update_user_command(
         UserRepository $userRepository,
-        SaveUserCommand $command,
+        UpdateUserCommand $command,
         User $user,
         DoctrineUnitOfWorkRepository $unitOfWork
     )
@@ -129,8 +121,6 @@ class SaveUserHandlerSpec extends ObjectBehavior
         $user->setMobile("9999345816")->shouldBeCalled();
         $command->getPassword()->shouldBeCalled()->willReturn("123456");
         $user->setPassword("123456")->shouldBeCalled();
-        $command->getStatus()->shouldBeCalled()->willReturn();
-        $user->setStatus(Argument::any())->shouldNotBeCalled();
 
         $unitOfWork->save($user)->shouldBeCalled();
         $unitOfWork->commit()->shouldBeCalled();
@@ -144,11 +134,11 @@ class SaveUserHandlerSpec extends ObjectBehavior
      * in case of user not found in system by id.
      *
      * @param UserRepository|Collaborator $userRepository
-     * @param SaveUserCommand|Collaborator $command
+     * @param UpdateUserCommand|Collaborator $command
      */
     function it_check_throw_exception_behavior_of_update_user_command(
         UserRepository $userRepository,
-        SaveUserCommand $command
+        UpdateUserCommand $command
     )
     {
         $command->getId()->shouldBeCalled()->willReturn(1);

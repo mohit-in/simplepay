@@ -11,6 +11,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class RegisterUserCommand
 {
+    private $id;
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
     /**
      * @Assert\NotNull(message="Name must not be empty")
      */
@@ -35,6 +44,27 @@ class RegisterUserCommand
      * @var User
      */
     private $user;
+
+    /**
+     *  Constructor to set parameters of save user.
+     *
+     * @param User $user
+     * @param array $arguments
+     */
+    public function __construct(User $user, array $arguments = array())
+    {
+        $this->user = $user;
+        $this->user->setName($arguments["name"]);
+        $this->user->setEmail($arguments["email"]);
+        $this->user->setMobile($arguments["mobile"]);
+        $this->user->setPassword($arguments["password"]);
+
+        $this->name = $arguments["name"];
+        $this->email = $arguments["email"];
+        $this->password = $arguments["password"];
+        $this->mobile = $arguments["mobile"];
+
+    }
 
     /**
      * @return User
@@ -74,27 +104,6 @@ class RegisterUserCommand
     public function getPassword()
     {
         return $this->password;
-    }
-
-    /**
-     *  Constructor to set parameters of save user.
-     *
-     * @param User $user
-     * @param array $arguments
-     */
-    public function __construct(User $user, array $arguments = array())
-    {
-        $this->user = $user;
-        $this->user->setName($arguments["name"]);
-        $this->user->setEmail($arguments["email"]);
-        $this->user->setMobile($arguments["mobile"]);
-        $this->user->setPassword($arguments["password"]);
-
-        $this->name = $arguments["name"];
-        $this->email = $arguments["email"];
-        $this->password = $arguments["password"];
-        $this->mobile = $arguments["mobile"];
-
     }
 
 }
