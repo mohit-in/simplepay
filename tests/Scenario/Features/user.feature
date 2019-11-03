@@ -5,7 +5,7 @@ Feature: Manage Users data
   Scenario: User can Create own account in the system by personal details
     When I send a "GET" request to "/user/1"
     Then the response code should 404
-    When I send a "POST" request to "/user/" with data
+    When I send a "POST" request to "/user" with data
       """
       {
         "name": "mohit",

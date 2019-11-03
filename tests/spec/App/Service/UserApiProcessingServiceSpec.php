@@ -5,7 +5,7 @@ namespace spec\App\Service;
 use App\Entity\User;
 use App\Repository\DoctrineUnitOfWorkRepository;
 use App\Repository\UserRepository;
-use App\Service\UserApiProcessingService;
+use App\Service\UserService;
 use PhpSpec\ObjectBehavior;
 use PhpSpec\Wrapper\Collaborator;
 use Prophecy\Argument;
@@ -22,7 +22,7 @@ class UserApiProcessingServiceSpec extends ObjectBehavior
      */
     function it_is_initializable()
     {
-        $this->shouldHaveType(UserApiProcessingService::class);
+        $this->shouldHaveType(UserService::class);
     }
 
     /**

@@ -3,57 +3,64 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
 
 /**
  * Class DoctrineUnitOfWorkRepository
  * @package App\Repository
  */
-class DoctrineUnitOfWorkRepository
+class DoctrineUnitOfWorkRepository extends ServiceEntityRepository
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-
-    /**
-     * DoctrineUnitOfWordRepository constructor.
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $registry, string $entity = '')
     {
-        $this->entityManager = $entityManager;
-    }
-
-
-    /**
-     * funtion to save entity
-     *
-     * @param  $entity
-     */
-    public function save($entity): void
-    {
-
-        $this->entityManager->persist($entity);
+        parent::__construct($registry, $entity);
     }
 
     /**
-     * funtion to remove entity
+     * Function to save entity
      *
      * @param $entity
+     * @param $flush
+     *
+     * @throws ORMException
      */
-    public function remove($entity): void
+    public function save($entity, $flush = false): void
     {
+        $this->getEntityManager()->persist($entity);
 
-        $this->entityManager->remove($entity);
+        if ($flush) {
+            $this->commit();
+        }
     }
 
     /**
-     * funtion to commit Unit of Work
+     * Function to remove entity
+     *
+     * @param $entity
+     * @param $flush
+     *
+     * @throws ORMException
+     */
+    public function remove($entity, $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->commit();
+        }
+    }
+
+    /**
+     * Function to commit Unit of Work
+     *
+     * @throws ORMException
      */
     public function commit(): void
     {
-        $this->entityManager->flush();
+        $this->getEntityManager()->flush();
     }
-
 }

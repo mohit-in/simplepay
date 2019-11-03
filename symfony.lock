@@ -191,6 +191,9 @@
             "config/packages/prod/jms_serializer.yaml"
         ]
     },
+    "monolog/monolog": {
+        "version": "1.25.1"
+    },
     "nikic/php-parser": {
         "version": "v4.2.4"
     },
@@ -276,6 +279,18 @@
         },
         "files": [
             "config/packages/sensio_framework_extra.yaml"
+        ]
+    },
+    "symfony/apache-pack": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "c82bead70f9a4f656354a193df7bf0ca2114efa0"
+        },
+        "files": [
+            "public/.htaccess"
         ]
     },
     "symfony/cache": {
@@ -402,6 +417,23 @@
     },
     "symfony/mime": {
         "version": "v4.3.5"
+    },
+    "symfony/monolog-bridge": {
+        "version": "v4.3.6"
+    },
+    "symfony/monolog-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "6240c6d43e8237a32452f057f81816820fd56ab6"
+        },
+        "files": [
+            "config/packages/dev/monolog.yaml",
+            "config/packages/prod/monolog.yaml",
+            "config/packages/test/monolog.yaml"
+        ]
     },
     "symfony/options-resolver": {
         "version": "v4.3.5"

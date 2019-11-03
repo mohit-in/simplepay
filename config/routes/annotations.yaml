@@ -1,7 +1,7 @@
 v1_user:
     resource: ../../src/Controller/API/V1/User
     type: annotation
-    prefix: v1/user
+    prefix: v1
 #v1_transaction:
 #    resource: ../../src/Controller/API/V1/Transaction
 #    type: annotation

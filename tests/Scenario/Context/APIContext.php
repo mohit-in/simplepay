@@ -8,6 +8,7 @@ use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -36,10 +37,10 @@ class APIContext implements Context
 
     /**
      * APIContext constructor.
-     * @param $baseUrl
-     * @param $container
+     * @param string $baseUrl
+     * @param ContainerInterface $container
      */
-    public function __construct($baseUrl,$container)
+    public function __construct($baseUrl, ContainerInterface $container)
     {
         $this->connection = $container->get('doctrine.orm.entity_manager')->getConnection();
         $this->baseUrl = $baseUrl;

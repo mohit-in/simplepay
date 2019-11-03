@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    test_host: '%env(TEST_HOST)%'
 
 services:
     # default configuration for services in *this* file
@@ -30,11 +31,11 @@ services:
 #    App\Repository\:
 #        resource: '../src/Repository'
 
-    user_api_processing_service:
-        class: App\Service\UserApiProcessingService
+#    user_api_processing_service:
+#        class: App\Service\UserApiProcessingService
 #        arguments:
 #            $userRepository: 'App\Repository\UserRepository'
 #            $unitOfWork: 'App\Repository\DoctrineUnitOfWorkRepository'
-        public: true
+#        public: true
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

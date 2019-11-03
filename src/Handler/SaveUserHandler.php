@@ -10,6 +10,7 @@ use App\Entity\User;
 
 use App\Repository\DoctrineUnitOfWorkRepository;
 use App\Repository\UserRepository;
+use App\Service\UserService;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -27,22 +28,24 @@ class SaveUserHandler implements MessageSubscriberInterface
     private $userRepository;
 
     /**
-     * @var DoctrineUnitOfWorkRepository
+     * @var UserService
      */
-    private $unitOfWork;
+    private $userService;
 
+    /**
+     * @var User
+     */
     private $user;
 
     /**
-     * UserApiProcessingService constructor.
+     * UserService constructor.
      * @param UserRepository $userRepository
-     * @param DoctrineUnitOfWorkRepository $unitOfWork
+     * @param UserService $userService
      */
-    public function __construct(UserRepository $userRepository,
-                                DoctrineUnitOfWorkRepository $unitOfWork)
+    public function __construct(UserRepository $userRepository, UserService $userService)
     {
         $this->userRepository = $userRepository;
-        $this->unitOfWork = $unitOfWork;
+        $this->userService    = $userService;
     }
 
     public static function getHandledMessages(): iterable
@@ -54,10 +57,8 @@ class SaveUserHandler implements MessageSubscriberInterface
     public function __invoke($command)
     {
         if (!empty($command->getId())) {
-            $this->user = $this->userRepository->find($command->getId());
-            if (empty($this->user)) {
-                throw new NotFoundHttpException("user not found by id: ". $command->getId());
-            }
+            $this->user = $this->userService->findUserById($command->getId());
+
             if (!empty($command->getName())) {
                 $this->user->setName($command->getName());
             }
@@ -73,13 +74,13 @@ class SaveUserHandler implements MessageSubscriberInterface
         }
         else {
             if (!empty($this->userRepository->findOneByEmail($command->getEmail()))) {
-                throw new ConflictHttpException("user found by email: ". $command->getEmail());
+                throw new ConflictHttpException("User exists with Email: ". $command->getEmail());
             }
-            $this->user = $command->getUser();
 
+            $this->user = $command->getUser();
         }
-        $this->unitOfWork->save($this->user);
-        $this->unitOfWork->commit();
+
+        $this->userRepository->save($this->user);
 
         return $this->user;
     }
