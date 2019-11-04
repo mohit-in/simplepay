@@ -27,7 +27,7 @@ pipeline {
         stage('test') {
             steps {
                 sh 'APP_ENV=test php bin/console cache:warmup'
-                sh 'php bin/console doctrine:migrations:migrate'
+                sh 'php bin/console doctrine:migrations:migrate -vvv --no-interaction'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/simple-phpunit --exclude-group unit --log-junit phpunit.junit.xml'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
             }
