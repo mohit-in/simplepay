@@ -21,8 +21,8 @@ RUN apt-get update \
      libmcrypt-dev \
      zip \
      unzip \
-     php7.1-cli \
-     php7.1-common
+     php7.1 \
+     php7.1-fpm
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
   && docker-php-ext-configure opcache --enable-opcache \
