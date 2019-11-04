@@ -20,8 +20,6 @@ pipeline {
                     sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.17.0.2:3306/simplepay" >> .env.local'
                     sh 'mysql -h 172.17.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
                 }
-                sh 'chmod -x .env.local'
-                sh './.env.local'
                 sh 'composer dump-env test'
                 sh 'composer install --dev'
             }
