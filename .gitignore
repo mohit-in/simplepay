@@ -5,7 +5,6 @@
 /public/bundles/
 /var/
 /vendor/
-/.env
 ###< symfony/framework-bundle ###
 
 ###> symfony/web-server-bundle ###
@@ -16,7 +15,6 @@
 ###< friends-of-behat/symfony-extension ###
 
 /.idea/*
-.env
 phpunit.junit.xml
 
 ###> symfony/phpunit-bridge ###
