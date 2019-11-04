@@ -15,7 +15,7 @@ pipeline {
                 sh 'rm -f .env.local'
                 sh 'echo "APP_ENV=test" >> .env.local'
                 sh 'echo "APP_SECRET=test_secret" >> .env.local'
-                sh 'echo "TEST_HOST=http://127.0.0.1:8000/v1" >> .env.local'
+                sh 'echo "TEST_HOST=http://localhost/v1" >> .env.local'
                 sh 'chmod 744 .env.local'
                 withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
                     sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.17.0.2:3306/simplepay" >> .env.dist'
@@ -24,7 +24,6 @@ pipeline {
                 sh './.env.local'
                 sh 'composer dump-env test'
                 sh 'composer install --dev'
-                sh 'bin/console server:start -d 0.0.0.0:8000'
             }
         }
         stage('test') {
@@ -41,7 +40,6 @@ pipeline {
             withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
                 sh 'mysql -h 172.17.0.2 -u root -p$DB_PASS -e "drop database simplepay;"'
             }
-            sh 'bin/console server:stop'
         }
         success {
             withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {

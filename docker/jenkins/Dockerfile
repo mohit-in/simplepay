@@ -21,8 +21,6 @@ RUN apt-get update \
      libmcrypt-dev \
      zip \
      unzip \
-     php7.1 \
-     php7.1-fpm
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
   && docker-php-ext-configure opcache --enable-opcache \
@@ -38,5 +36,9 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     mcrypt \
     zip \
     bcmath
+
+COPY simplepay.conf /etc/apache2/sites-available/000-default.conf
+RUN a2enmod rewrite
+RUN service apache2 reload
 
 WORKDIR /var/www
