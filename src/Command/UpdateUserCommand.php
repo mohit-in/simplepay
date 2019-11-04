@@ -1,47 +1,64 @@
 <?php
 
-
 namespace App\Command;
 
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
+/**
+ * Class UpdateUserCommand
+ * @package App\Command
+ */
 class UpdateUserCommand
 {
     /**
-     * @Assert\NotNull(message="Name must not be empty")
+     * @var int $id
+     * @Assert\NotNull(message="Id must not be empty")
+     * @Serializer\Type("int")
      */
     private $id;
+
+
     /**
-     *
-     */
-    private $name;
-    /**
-     *
+     * @var string $email
+     * @Assert\NotNull(message="Email must not be empty")
+     * @Serializer\Type("string")
      */
     private $email;
+
     /**
-     *
+     * @var string $mobile
+     * @Assert\NotNull(message="Mobile must not be empty")
+     * @Serializer\Type("string")
      */
     private $mobile;
+
     /**
-     *
+     * @var string $password
+     * @Assert\NotNull(message="Password must not be empty")
+     * @Serializer\Type("string")
      */
     private $password;
 
-    public function __construct(int $id, array $parameters = array())
+    /**
+     * RegisterUserCommand constructor.
+     * @param int $id
+     * @param array $arguments
+     */
+    public function __construct(int $id, array $arguments = array())
     {
+        //$serializer = SerializerBuilder::create()->build();
+        //$serializer->fromArray($arguments, self::class, null);
+        #$this->name = $arguments["name"];
+        $this->email = $arguments["email"];
+        $this->mobile = $arguments["mobile"];
+        $this->password = $arguments["password"];
         $this->id = $id;
-        $this->name = $parameters["name"];
-        if (!empty($parameters["mobile"])) {
-            $this->mobile = $parameters["mobile"];
-        }
-        if (!empty($parameters["password"])) {
-            $this->password = $parameters["password"];
-        }
     }
 
     /**
+     * Get id
+     *
      * @return int
      */
     public function getId(): int
@@ -50,7 +67,9 @@ class UpdateUserCommand
     }
 
     /**
-     * @return mixed
+     * Get name
+     *
+     * @return string
      */
     public function getName()
     {
@@ -58,7 +77,9 @@ class UpdateUserCommand
     }
 
     /**
-     * @return mixed
+     * Get email
+     *
+     * @return string
      */
     public function getEmail()
     {
@@ -66,7 +87,9 @@ class UpdateUserCommand
     }
 
     /**
-     * @return mixed
+     * Get mobile
+     *
+     * @return string
      */
     public function getMobile()
     {
@@ -74,10 +97,22 @@ class UpdateUserCommand
     }
 
     /**
-     * @return mixed
+     * Get password
+     *
+     * @return string
      */
     public function getPassword()
     {
         return $this->password;
+    }
+
+    /**
+     * Get status
+     *
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
     }
 }

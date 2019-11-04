@@ -2,24 +2,24 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\EntityBaseTrait;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Traits\EntityIdTrait;
-use App\Entity\Traits\EntityTimestampableTrait;
 use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks
+ * @Serializer\AccessorOrder("custom", custom = {"id", "uuid", "name", "email", "mobile"})
  */
 class User
 {
-    use EntityIdTrait;
-    use EntityTimestampableTrait;
+    use EntityBaseTrait;
 
     /**
      * @ORM\Column(type="string", length=256)
-     * @Assert\Length(max=256)
      * @Assert\NotNull()
+     * @Serializer\Type("string")
      */
     private $name;
 
@@ -28,6 +28,7 @@ class User
      * @Assert\Email()
      * @Assert\Length(max=255)
      * @Assert\NotNull()
+     * @Serializer\Type("string")
      */
     private $email;
 
@@ -35,6 +36,7 @@ class User
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(max=255)
      * @Assert\NotNull()
+     * @Serializer\Type("string")
      */
     private $mobile;
 
@@ -47,11 +49,13 @@ class User
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(max=255)
      * @Assert\NotNull()
+     * @Serializer\Type("string")
      */
     private $password;
 
     /**
      * @ORM\Column(type="float", nullable=true, options={"default" : 0})
+     * @Serializer\Type("float")
      */
     private $balance;
 
