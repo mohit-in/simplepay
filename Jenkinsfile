@@ -23,9 +23,8 @@ pipeline {
         stage('test') {
             steps {
                 sh 'APP_ENV=test php bin/console cache:warmup'
-                sh 'cat .env.local.php'
-                sh 'cat .env.test'
                 sh 'php bin/console doctrine:migrations:migrate'
+                sh 'curl -XGET http://127.0.0.1/v1/user/1'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/simple-phpunit --exclude-group unit --log-junit phpunit.junit.xml'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
             }
