@@ -40,7 +40,7 @@ trait EntityBaseTrait
     /**
      * @var DateTime
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
-     *  @Serializer\Exclude()
+     * @Serializer\Exclude()
      */
     protected $created_at;
 
@@ -75,6 +75,7 @@ trait EntityBaseTrait
 
     /**
      * Auto set the last_modified_at value.
+     *
      * @ORM\PreUpdate
      */
     public function onPreUpdate()

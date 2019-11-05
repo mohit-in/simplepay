@@ -13,29 +13,45 @@ class UpdateUserCommand
 {
     /**
      * @var int $id
+     *
      * @Assert\NotNull(message="Id must not be empty")
+     *
      * @Serializer\Type("int")
      */
     private $id;
 
+    /**
+     * @var string $name
+     *
+     * @Assert\NotBlank(allowNull = true, message="Name must not be empty")
+     *
+     * @Serializer\Type("string")
+     */
+    private $name;
 
     /**
      * @var string $email
-     * @Assert\Blank|(message="Email must not be empty")
+     *
+     * @Assert\NotBlank(allowNull = true, message="Email must not be empty")
+     *
      * @Serializer\Type("string")
      */
     private $email;
 
     /**
      * @var string $mobile
-     * @Assert\NotNull(message="Mobile must not be empty")
+     *
+     * @Assert\NotBlank(allowNull = true, message="Mobile must not be empty")
+     *
      * @Serializer\Type("string")
      */
     private $mobile;
 
     /**
      * @var string $password
-     * @Assert\NotNull(message="Password must not be empty")
+     *
+     * @Assert\NotBlank(allowNull=true, message="Password must not be empty")
+     *
      * @Serializer\Type("string")
      */
     private $password;
@@ -47,15 +63,11 @@ class UpdateUserCommand
      */
     public function __construct(int $id, array $arguments = array())
     {
-        //$serializer = SerializerBuilder::create()->build();
-        //$serializer->fromArray($arguments, self::class, null);
-        #$this->name = $arguments["name"];
-
-        $this->mobile = $arguments["mobile"];
-        if($arguments["password"])
-        $this->password = $arguments["password"];
-
         $this->id = $id;
+        $this->name = $arguments['name']??null;
+        $this->email = $arguments['email']??null;
+        $this->password = $arguments['password']??null;
+        $this->mobile = $arguments['mobile']??null;
     }
 
     /**

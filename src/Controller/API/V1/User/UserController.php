@@ -81,7 +81,7 @@ class UserController extends AbstractFOSRestController
             $envelope = $this->messageBus->dispatch(new RegisterUserCommand($user, $request->request->all()));
             /** @var User $user */
             $user = $envelope->last(HandledStamp::class)->getResult();
-            $this->userRepository->commit();
+           // $this->userRepository->commit();
         } catch (ValidationFailedException $exception) {
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
         }
