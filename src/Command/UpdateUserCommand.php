@@ -21,7 +21,7 @@ class UpdateUserCommand
 
     /**
      * @var string $email
-     * @Assert\NotNull(message="Email must not be empty")
+     * @Assert\Blank|(message="Email must not be empty")
      * @Serializer\Type("string")
      */
     private $email;
@@ -50,9 +50,11 @@ class UpdateUserCommand
         //$serializer = SerializerBuilder::create()->build();
         //$serializer->fromArray($arguments, self::class, null);
         #$this->name = $arguments["name"];
-        $this->email = $arguments["email"];
+
         $this->mobile = $arguments["mobile"];
+        if($arguments["password"])
         $this->password = $arguments["password"];
+
         $this->id = $id;
     }
 

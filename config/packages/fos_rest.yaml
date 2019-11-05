@@ -3,7 +3,7 @@ fos_rest:
         rules:
             - {path: '^', priorities: ['json'], fallback_format: json}
     exception:
-        enabled: false
+        enabled: true
     view:
         view_response_listener: 'force'
         formats:
