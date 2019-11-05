@@ -105,6 +105,7 @@ class UserController extends AbstractFOSRestController
             $envelope->last(HandledStamp::class)->getResult();
             $this->userRepository->commit();
         } catch (ValidationFailedException $exception) {
+            print_r("dddddddddddddddddddddddddd");exit;
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
         }
 

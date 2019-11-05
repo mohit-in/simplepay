@@ -8,6 +8,7 @@ use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use PHPUnit\Framework\Assert;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use GuzzleHttp\Exception\RequestException;
@@ -63,9 +64,8 @@ class APIContext implements Context
      * @param PyStringNode $string
      * @throws GuzzleException
      */
-    public function iSendARequestToWithData($requestMethod, $requestUri, PyStringNode $string)
+    public function iSendARequestToWithData ($requestMethod, $requestUri, PyStringNode $string)
     {
-
         $this->request($requestMethod,$requestUri,$string);
     }
 
@@ -76,7 +76,7 @@ class APIContext implements Context
      * @param PyStringNode|null $payLoad
      * @throws GuzzleException
      */
-    public function request($httpMethod, $requestUri,PyStringNode $payLoad = null)
+    public function request($httpMethod, $requestUri, PyStringNode $payLoad = null)
     {
         $httpMethod = strtoupper($httpMethod);
         $urlPrefix = "v1";
@@ -89,23 +89,20 @@ class APIContext implements Context
                 $urlPrefix.$requestUri,
                 ['json' => json_decode($payLoad)]
             );
-        }
-        catch (RequestException $e) {
-
+        } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $this->response = $e->getResponse();
             }
         }
     }
+
     /**
      * @Then the response code should :responseStatusCode
      * @param $responseStatusCode
      */
     public function theResponseCodeShould($responseStatusCode)
     {
-        if ($responseStatusCode != $this->response->getStatusCode()){
-            throw new HttpException(200,"Test Fails..");
-        }
+        Assert::assertEquals($responseStatusCode, $this->response->getStatusCode());
     }
 
     /**
@@ -115,9 +112,6 @@ class APIContext implements Context
      */
     public function theResponseHasProperty($propertyName, $propertyValue)
     {
-        $responseData = json_decode($this->response->getBody(),true);
-        if ($propertyValue != $responseData[$propertyName]){
-            throw new HttpException(200,"Test Fails..");
-        }
+        Assert::assertEquals($propertyValue, json_decode($this->response->getBody(),true)[$propertyName]);
     }
 }
