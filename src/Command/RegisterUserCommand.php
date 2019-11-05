@@ -62,11 +62,17 @@ class RegisterUserCommand
     {
         //$serializer = SerializerBuilder::create()->build();
         //$serializer->fromArray($arguments, self::class, null);
+        $this->user = $user;
+        $this->user->setName($arguments["name"]);
+        $this->user->setEmail($arguments["email"]);
+        $this->user->setMobile($arguments["mobile"]);
+        $this->user->setPassword($arguments["password"]);
+
+
         $this->name = $arguments["name"];
         $this->email = $arguments["email"];
         $this->mobile = $arguments["mobile"];
         $this->password = $arguments["password"];
-        $this->user = $user;
     }
 
     /**

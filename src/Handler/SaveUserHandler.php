@@ -68,7 +68,7 @@ class SaveUserHandler implements MessageSubscriberInterface
             if (!empty($command->getMobile())) {
                 $this->user->setMobile($command->getMobile());
             }
-            if(!empty($command->getPassword())) {
+            if (!empty($command->getPassword())) {
                 $this->user->setPassword($command->getPassword());
             }
         }
@@ -79,7 +79,6 @@ class SaveUserHandler implements MessageSubscriberInterface
 
             $this->user = $command->getUser();
         }
-
         $this->userRepository->save($this->user);
 
         return $this->user;
