@@ -32,6 +32,7 @@ pipeline {
         stage('test') {
             steps {
                 sh 'APP_ENV=test php bin/console cache:clear'
+                sh 'chmod -R 770 var/cache var/log'
                 sh 'php bin/console doctrine:migrations:migrate'
                 sh 'php -d memory_limit=-1 vendor/bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
                 sh 'php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
