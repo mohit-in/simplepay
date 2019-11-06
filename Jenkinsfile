@@ -8,6 +8,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
+                sh 'echo $PWD'
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
                     sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/mohit-in/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"pending\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build is pending\"}'"
                 }
@@ -18,14 +19,17 @@ pipeline {
                     sh 'mysql -h 172.17.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
                 }
                 sh 'echo "TEST_HOST=http://localhost/v1" >> .env.test'
+                sh 'echo $PWD'
                 sh 'composer install --dev'
                 sh 'composer dump-env test'
+                sh 'echo $PWD'
             }
         }
         stage('test') {
             steps {
                 sh 'APP_ENV=test php bin/console cache:warmup'
                 sh 'php bin/console doctrine:migrations:migrate'
+                sh 'echo $PWD'
                 sh 'curl -XGET http://localhost/v1/user/1'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/simple-phpunit --exclude-group unit --log-junit phpunit.junit.xml'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
