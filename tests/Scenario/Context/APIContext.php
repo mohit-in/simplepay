@@ -90,7 +90,7 @@ class APIContext implements Context
 
     /**
      * Funtion to check entity for Given and Then scenario
-     * 
+     *
      * @Given I do not have an entity :entity with :arguments
      * @param $entity
      * @param $arguments
