@@ -18,6 +18,8 @@ pipeline {
                 }
                 sh 'echo "TEST_HOST=http://172.17.0.4/v1" >> .env.test'
                 sh 'composer install --dev'
+                sh 'docker network inspect bridge'
+                sh 'docker container ls'
                 sh 'composer dump-env test'
             }
         }
