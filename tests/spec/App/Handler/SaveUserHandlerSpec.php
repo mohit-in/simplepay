@@ -8,8 +8,11 @@ use App\Entity\User;
 use App\Handler\SaveUserHandler;
 use App\Repository\DoctrineUnitOfWorkRepository;
 use App\Repository\UserRepository;
+use App\Service\UserService;
+use Doctrine\ORM\ORMException;
 use PhpSpec\ObjectBehavior;
 use PhpSpec\Wrapper\Collaborator;
+use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -31,14 +34,11 @@ class SaveUserHandlerSpec extends ObjectBehavior
      * Function to initialise dependencies for specs.
      *
      * @param UserRepository|Collaborator $userRepository
-     * @param DoctrineUnitOfWorkRepository|Collaborator $unitOfWork
+     * @param UserService $userService
      */
-    function let(
-        UserRepository $userRepository,
-        DoctrineUnitOfWorkRepository $unitOfWork
-    )
+    function let(UserRepository $userRepository, UserService $userService)
     {
-        $this->beConstructedWith($userRepository, $unitOfWork);
+        $this->beConstructedWith($userRepository,$userService );
     }
 
     /**
@@ -47,13 +47,10 @@ class SaveUserHandlerSpec extends ObjectBehavior
      * @param UserRepository|Collaborator $userRepository
      * @param RegisterUserCommand $command
      * @param User|Collaborator $user
-     * @param DoctrineUnitOfWorkRepository|Collaborator $unitOfWork
+     * @throws ORMException
      */
     function it_check_success_behavior_of_register_user_command(
-        UserRepository $userRepository,
-        RegisterUserCommand $command,
-        User $user,
-        DoctrineUnitOfWorkRepository $unitOfWork
+        UserRepository $userRepository, RegisterUserCommand $command, User $user
     )
     {
         $command->getId()->shouldBeCalled()->willReturn();
@@ -62,9 +59,7 @@ class SaveUserHandlerSpec extends ObjectBehavior
         $userRepository->findOneByEmail("mohit@gmail.com")->shouldBeCalled()->willReturn();
 
         $command->getUser()->shouldBeCalled()->willReturn($user);
-
-        $unitOfWork->save($user)->shouldBeCalled();
-        $unitOfWork->commit()->shouldBeCalled();
+        $userRepository->save($user)->shouldBeCalled();
 
         $this->__invoke($command);
 
@@ -75,7 +70,7 @@ class SaveUserHandlerSpec extends ObjectBehavior
      * in case of user already present in system by same email.
      *
      * @param UserRepository|Collaborator $userRepository
-     * @param RegisterUserCommand|Collaborator $command
+     * @param SaveUserCommand|Collaborator $command
      * @param User|Collaborator $user
      */
     function it_check_throw_exception_behavior_of_register_user_command(
@@ -84,7 +79,6 @@ class SaveUserHandlerSpec extends ObjectBehavior
         User $user
     )
     {
-
         $command->getId()->shouldBeCalled()->willReturn();
         $command->getEmail()->willReturn("mohit@gmail.com");
 
@@ -105,13 +99,11 @@ class SaveUserHandlerSpec extends ObjectBehavior
         UserRepository $userRepository,
         UpdateUserCommand $command,
         User $user,
-        DoctrineUnitOfWorkRepository $unitOfWork
+        UserService $userService
     )
     {
         $command->getId()->shouldBeCalled()->willReturn(1);
-        $command->getEmail()->willReturn("mohit@gmail.com");
-
-        $userRepository->find(1)->shouldBeCalled()->willReturn($user);
+        $userService->findUserById(1)->shouldBeCalled()->willReturn($user);
 
         $command->getName()->shouldBeCalled()->willReturn("mohit");
         $user->setName("mohit")->shouldBeCalled();
@@ -122,8 +114,8 @@ class SaveUserHandlerSpec extends ObjectBehavior
         $command->getPassword()->shouldBeCalled()->willReturn("123456");
         $user->setPassword("123456")->shouldBeCalled();
 
-        $unitOfWork->save($user)->shouldBeCalled();
-        $unitOfWork->commit()->shouldBeCalled();
+
+        $userRepository->save($user)->shouldBeCalled();
 
         $this->__invoke($command);
 
@@ -134,17 +126,19 @@ class SaveUserHandlerSpec extends ObjectBehavior
      * in case of user not found in system by id.
      *
      * @param UserRepository|Collaborator $userRepository
-     * @param UpdateUserCommand|Collaborator $command
+     * @param UpdateUserCommand $command
+     * @param UserService $userService
+     * @param User $user
      */
     function it_check_throw_exception_behavior_of_update_user_command(
         UserRepository $userRepository,
-        UpdateUserCommand $command
+        UpdateUserCommand $command,
+        UserService $userService,
+        User $user
     )
     {
         $command->getId()->shouldBeCalled()->willReturn(1);
-
-        $userRepository->find(1)->shouldBeCalled()->willReturn();
-
+        $userService->findUserById(1)->shouldBeCalled()->willThrow(NotFoundHttpException::class);
         $this->shouldThrow(NotFoundHttpException::class)->during__invoke($command);
     }
 

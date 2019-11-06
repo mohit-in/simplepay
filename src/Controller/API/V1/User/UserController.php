@@ -72,7 +72,7 @@ class UserController extends AbstractFOSRestController
      * @Rest\Post("/user")
      * @param Request $request
      * @return View
-     * @throws ORMException
+     * @throws \Exception
      */
     public function registerUser(Request $request): View
     {
@@ -81,7 +81,6 @@ class UserController extends AbstractFOSRestController
             $envelope = $this->messageBus->dispatch(new RegisterUserCommand($user, $request->request->all()));
             /** @var User $user */
             $user = $envelope->last(HandledStamp::class)->getResult();
-            $this->userRepository->commit();
         } catch (ValidationFailedException $exception) {
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
         }
@@ -103,7 +102,6 @@ class UserController extends AbstractFOSRestController
         try {
             $envelope = $this->messageBus->dispatch(new UpdateUserCommand($id, $request->request->all()));
             $envelope->last(HandledStamp::class)->getResult();
-            $this->userRepository->commit();
         } catch (ValidationFailedException $exception) {
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
         }

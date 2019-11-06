@@ -6,16 +6,18 @@ use App\Entity\User;
 use App\Repository\DoctrineUnitOfWorkRepository;
 use App\Repository\UserRepository;
 use App\Service\UserService;
+use Doctrine\ORM\ORMException;
 use PhpSpec\ObjectBehavior;
 use PhpSpec\Wrapper\Collaborator;
 use Prophecy\Argument;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class UserApiProcessingServiceSpec
  * @package spec\App\Service
  */
-class UserApiProcessingServiceSpec extends ObjectBehavior
+class UserServiceSpec extends ObjectBehavior
 {
     /**
      * function to check class initializable behavior
@@ -33,7 +35,7 @@ class UserApiProcessingServiceSpec extends ObjectBehavior
      */
     function let(UserRepository $userRepository, DoctrineUnitOfWorkRepository $unitOfWork)
     {
-        $this->beConstructedWith($userRepository, $unitOfWork);
+        $this->beConstructedWith($userRepository);
 
     }
 
@@ -43,10 +45,10 @@ class UserApiProcessingServiceSpec extends ObjectBehavior
      * @param UserRepository|Collaborator $userRepository
      * @param User|Collaborator $user
      */
-    function it_process_get_user_details_request(UserRepository $userRepository, User $user)
+    function it_should_return_a_user_if_a_user_found_in_system(UserRepository $userRepository, User $user)
     {
         $userRepository->find(Argument::any())->shouldBeCalled()->willReturn($user);
-        $this->processGetUserDetailsRequest(['id' => Argument::any()])->shouldReturn($user);
+        $this->findUserById(1)->shouldReturn($user);
     }
 
     /**
@@ -55,40 +57,26 @@ class UserApiProcessingServiceSpec extends ObjectBehavior
      * @param UserRepository|Collaborator $userRepository
      * @param User|Collaborator $user
      */
-    function it_throw_exception_when_user_not_found_in_process_user_details_request(UserRepository $userRepository, User $user)
+    function it_should_throw_an_exception_if_no_user_found_in_system(UserRepository $userRepository, User $user)
     {
-        $userRepository->find(Argument::any())->shouldBeCalled()->willReturn(null);
-        $this->shouldThrow(HttpException::class)->during(
-            'ProcessGetUserDetailsRequest',
-            ['id' =>1]);
+        $userRepository->find(1)->shouldBeCalled()->willReturn(null);
+        $this->shouldThrow(NotFoundHttpException::class)->during(
+            'findUserById',[1]);
     }
-
 
     /**
      * * funtion to process delete user request
      *
      * @param UserRepository|Collaborator $userRepository
      * @param User|Collaborator $user
-     * @param DoctrineUnitOfWorkRepository $unitOfWork
+     * @throws ORMException
      */
-    function it_process_delete_user_request(
-        UserRepository $userRepository,
-        User $user,
-        DoctrineUnitOfWorkRepository $unitOfWork)
+    function it_should_remove_a_user_if_a_user_found_in_system(UserRepository $userRepository, User $user)
     {
-        $userRepository->find(Argument::any())->shouldBeCalledOnce()->willReturn($user);
-        $unitOfWork->remove($user)->shouldBeCalledOnce();
-        $unitOfWork->commit()->shouldBeCalledOnce();
-        $this->processDeleteUserRequest(['id' => Argument::any()])->shouldReturn($user);
-    }
+        $userRepository->find(1)->shouldBeCalled()->willReturn($user);
+        $userRepository->remove($user)->shouldBeCalled();
 
-    function it_throw_exception_when_user_not_found_in_process_delete_user_request(
-        UserRepository $userRepository)
-    {
-        $userRepository->find(Argument::any())->shouldBeCalled()->willReturn(null);
-        $this->shouldThrow(HttpException::class)->during(
-            'ProcessDeleteUserRequest', ['id' => 1]);
+        $this->deleteUser(1);
     }
-
 
 }

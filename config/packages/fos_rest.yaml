@@ -2,8 +2,8 @@ fos_rest:
     format_listener:
         rules:
             - {path: '^', priorities: ['json'], fallback_format: json}
-#    exception:
-#        enabled: true
+    exception:
+        enabled: true
     view:
         view_response_listener: 'force'
         formats:
