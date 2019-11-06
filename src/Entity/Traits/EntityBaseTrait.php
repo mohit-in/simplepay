@@ -6,7 +6,6 @@ namespace App\Entity\Traits;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
-use Ramsey\Uuid\Uuid;
 
 
 /**
@@ -23,37 +22,30 @@ trait EntityBaseTrait
      *
      * @ORM\Id
      * @ORM\Column(type="integer", options={"unsigned": true})
+     *
      * @ORM\GeneratedValue
-     * @Serializer\Type("string")
+     *
+     * @Serializer\Type("int")
      */
     protected $id;
 
-    /**
-     * @var string
-     *
-     *
-     * @ORM\Column(type="uuid", name="uuid", unique=true)
-     * @Serializer\Type("string")
-     */
-    protected $uuid;
 
     /**
      * @var DateTime
+     *
      * @ORM\Column(name="created_at", type="datetime", nullable=true)
-     * @Serializer\Exclude()
      */
-    protected $created_at;
+    protected $createdAt;
 
     /**
      * @var DateTime
+     *
      * @ORM\Column(name="last_modified_at", type="datetime", nullable=true)
-     * @Serializer\Exclude()
+     *
      */
-    protected $last_modified_at;
-
+    protected $lastModifiedAt;
 
     /**
-     *
      * @return int|null
      */
     public function getId(): ?int
@@ -62,16 +54,36 @@ trait EntityBaseTrait
     }
 
     /**
-     * Get uuid
-     *
-     * @return Uuid
+     * @return DateTime
      */
-    public function getUuid(): Uuid
+    public function getCreatedAt(): DateTime
     {
-        return $this->uuid;
+        return $this->createdAt;
     }
 
+    /**
+     * @param DateTime $createdAt
+     */
+    public function setCreatedAt(DateTime $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
 
+    /**
+     * @return DateTime
+     */
+    public function getLastModifiedAt(): DateTime
+    {
+        return $this->lastModifiedAt;
+    }
+
+    /**
+     * @param DateTime $lastModifiedAt
+     */
+    public function setLastModifiedAt(DateTime $lastModifiedAt): void
+    {
+        $this->lastModifiedAt = $lastModifiedAt;
+    }
 
     /**
      * Auto set the last_modified_at value.
@@ -93,54 +105,6 @@ trait EntityBaseTrait
         $now = new DateTime();
         $this->setCreatedAt($now);
         $this->setLastModifiedAt($now);
-        $this->uuid = Uuid::uuid4();
-    }
-
-
-    /**
-     * Get last_modified_at value
-     *
-     * @return DateTime
-     */
-    public function getLastModifiedAt(): DateTime
-    {
-        return $this->last_modified_at;
-    }
-
-    /**
-     * Set last_modified_at value
-     *
-     * @param DateTime $last_modified_at
-     * @return $this
-     */
-    public function setLastModifiedAt(DateTime $last_modified_at)
-    {
-        $this->last_modified_at = $last_modified_at;
-
-        return $this;
-    }
-
-    /**
-     * Get created_at value
-     *
-     * @return DateTime
-     */
-    public function getCreatedAt(): DateTime
-    {
-        return $this->created_at;
-    }
-
-    /**
-     * Set created_at value
-     *
-     * @param DateTime $created_at
-     * @return $this
-     */
-    public function setCreatedAt(DateTime $created_at)
-    {
-        $this->created_at = $created_at;
-
-        return $this;
     }
 
 

@@ -73,12 +73,15 @@ class SaveUserHandler implements MessageSubscriberInterface
             }
         }
         else {
+
             if (!empty($this->userRepository->findOneByEmail($command->getEmail()))) {
                 throw new ConflictHttpException("User exists with Email: ". $command->getEmail());
             }
-
             $this->user = $command->getUser();
+
         }
+
+
         $this->userRepository->save($this->user);
 
         return $this->user;

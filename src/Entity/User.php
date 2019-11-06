@@ -16,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User
 {
     use EntityBaseTrait;
+
     const INACTIVE = 0;
     const ACTIVE = 1;
 
@@ -58,7 +59,7 @@ class User
     private $password;
 
     /**
-     * @ORM\Column(type="float",  options={"default" : 0})
+     * @ORM\Column(type="float", nullable=true, options={"default" : 0})
      *
      * @Serializer\Type("float")
      */
@@ -72,6 +73,32 @@ class User
      * @Assert\Choice({"1", "0"})
      */
     private $status = self::ACTIVE;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="uuid", unique=true)
+     *
+     * @Serializer\Type("string")
+     */
+    private $uuid;
+
+    /**
+     * @return string
+     */
+    public function getUuid(): string
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * @param string $uuid
+     */
+    public function setUuid(string $uuid): void
+    {
+        $this->uuid = $uuid;
+    }
+
 
     /**
      * Get Name

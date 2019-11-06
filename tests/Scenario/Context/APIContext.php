@@ -3,11 +3,18 @@
 
 namespace App\Tests\Scenario\Context;
 
+use App\Entity;
 use App\Tests\Scenario\Traits\UserTrait;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\DBAL\DBALException;
+use Doctrine\DBAL\Exception\InvalidArgumentException;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use JMS\Serializer\SerializerBuilder;
 use PHPUnit\Framework\Assert;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +41,7 @@ class APIContext implements Context
     /**
      * @var
      */
-    private $connection;
+    private $entityManager;
 
     /**
      * APIContext constructor.
@@ -43,7 +50,7 @@ class APIContext implements Context
      */
     public function __construct($baseUrl, ContainerInterface $container)
     {
-        $this->connection = $container->get('doctrine.orm.entity_manager')->getConnection();
+        $this->entityManager = $container->get('doctrine.orm.entity_manager');
         $this->baseUrl = $baseUrl;
     }
     /**
@@ -54,7 +61,7 @@ class APIContext implements Context
      */
     public function iSendARequestTo($requestMethod, $requestUri)
     {
-        $this->request($requestMethod,$requestUri);
+        $this->request($requestMethod, $requestUri);
     }
 
     /**
@@ -66,7 +73,51 @@ class APIContext implements Context
      */
     public function iSendARequestToWithData ($requestMethod, $requestUri, PyStringNode $string)
     {
-        $this->request($requestMethod,$requestUri,$string);
+        $this->request($requestMethod, $requestUri,$string);
+    }
+
+    /**
+     * Funtion to check entity for Given and Then scenario
+     *
+     * @Given  I have an entity :entity with :arguments
+     * @param $entity
+     * @param $arguments
+     */
+    public function iHaveAnEntityWith($entity, $arguments)
+    {
+        Assert::assertCount(1, $this->getResultByEntity($entity, $arguments));
+    }
+
+    /**
+     * Funtion to check entity for Given and Then scenario
+     * 
+     * @Given I do not have an entity :entity with :arguments
+     * @param $entity
+     * @param $arguments
+     */
+    public function iDoNotHaveAnEntityWith($entity, $arguments)
+    {
+        Assert::assertCount(0,$this->getResultByEntity($entity, $arguments));
+    }
+
+    /**
+     * Function to return query data.
+     *
+     * @param $entity
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    private function getResultByEntity($entity, $arguments)
+    {
+        parse_str($arguments, $arguments);
+        $qb = $this->entityManager->createQueryBuilder()
+            ->select('ent.id')
+            ->from('App\\Entity\\'.$entity, 'ent');
+        foreach ($arguments as $key => $value) {
+            $qb->andWhere("ent." . $key . " = '$value'");
+        }
+        return $qb->getQuery()->getResult();
     }
 
     /**

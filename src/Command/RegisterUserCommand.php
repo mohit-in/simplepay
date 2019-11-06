@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\User;
 use JMS\Serializer\Annotation as Serializer;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -57,12 +58,12 @@ class RegisterUserCommand
      * RegisterUserCommand constructor.
      * @param User $user
      * @param array $arguments
+     * @throws \Exception
      */
     public function __construct(User $user, array $arguments = array())
     {
-        //$serializer = SerializerBuilder::create()->build();
-        //$serializer->fromArray($arguments, self::class, null);
         $this->user = $user;
+        $this->user->setUuid(Uuid::uuid1());
         $this->user->setName($arguments["name"]);
         $this->user->setEmail($arguments["email"]);
         $this->user->setMobile($arguments["mobile"]);
