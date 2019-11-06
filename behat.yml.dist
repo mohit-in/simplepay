@@ -1,0 +1,10 @@
+default:
+  suites:
+    default:
+      paths:
+        features: '%paths.base%/tests/Scenario/Features'
+      contexts:
+        - App\Tests\Scenario\Context\APIContext:
+            - http://simplepay.com/v1
+  extensions:
+    FriendsOfBehat\SymfonyExtension: ~

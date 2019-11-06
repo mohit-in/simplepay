@@ -12,21 +12,22 @@ pipeline {
                 }
                 sh 'rm -rf var/cache/* var/log/*'
                 sh 'git clean -df && git reset --hard'
-                sh 'rm -f .env.dist'
-                sh 'echo "APP_ENV=test" >> .env.dist'
-                sh 'chmod 744 .env.dist'
                 withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
-                    sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.17.0.2:3306/simplepay" >> .env.dist'
+                    sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.17.0.2:3306/simplepay" >> .env.test'
                     sh 'mysql -h 172.17.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
                 }
-                sh './.env.dist'
-                sh 'composer install'
+                sh 'echo "TEST_HOST=http://127.0.0.1/v1" >> .env.test'
+                sh 'composer install --dev'
+                sh 'composer dump-env test'
             }
         }
         stage('test') {
             steps {
-                sh 'bin/console cache:warmup --env=test'
-                sh 'php -d memory_limit=-1 bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
+                sh 'APP_ENV=test php bin/console cache:warmup'
+                sh 'php bin/console doctrine:migrations:migrate'
+                sh 'curl -XGET http://127.0.0.1/v1/user/1'
+                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/simple-phpunit --exclude-group unit --log-junit phpunit.junit.xml'
+                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
             }
         }
     }

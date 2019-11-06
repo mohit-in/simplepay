@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 
 /**
@@ -12,7 +11,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
  * @method User[]    findAll()
  * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository
+class UserRepository extends DoctrineUnitOfWorkRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
@@ -21,18 +20,18 @@ class UserRepository extends ServiceEntityRepository
 
     /**
      * @return User[] Returns an array of User objects
-     */  
-    // public function findByEmail($email)
-    // {
-    //     return $this->createQueryBuilder('u')
-    //         ->andWhere('u.email = :val')
-    //         ->setParameter('val', $email)
-    //         ->orderBy('u.id', 'ASC')
-    //         ->setMaxResults(1)
-    //         ->getQuery()
-    //         ->getResult()
-    //     ;
-    // }
+     */
+    public function findOneByEmail($email)
+     {
+         return $this->createQueryBuilder('u')
+             ->andWhere('u.email = :val')
+             ->setParameter('val', $email)
+             ->orderBy('u.id', 'ASC')
+             ->setMaxResults(1)
+             ->getQuery()
+             ->getResult()
+         ;
+     }
     /*
     public function findOneBySomeField($value): ?User
     {

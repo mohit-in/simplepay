@@ -2,81 +2,139 @@
 
 namespace App\Controller\API\V1\User;
 
-use FOS\RestBundle\Controller\AbstractFOSRestController;
+use App\Command\RegisterUserCommand;
+use App\Command\UpdateUserCommand;
+use App\Entity\User;
+use App\Repository\UserRepository;
+use App\Service\UserService;
+use Doctrine\ORM\ORMException;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\AbstractFOSRestController;
+use FOS\RestBundle\View\View;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use App\Service\UserApiProcessingService;
-use FOS\RestBundle\View\View;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Messenger\Exception\ValidationFailedException;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 
+
+/**
+ * Class UserController
+ * @package App\Controller\API\V1\User
+ */
 class UserController extends AbstractFOSRestController
 {
     /**
-     * @Rest\Post("/")
-     * @param Request $request
-     * @return View
+     * @var MessageBusInterface
      */
-    public function createUser(Request $request)
+    private $messageBus;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * UserController constructor.
+     *
+     * @param MessageBusInterface $messageBus
+     * @param UserRepository $userRepository
+     * @param UserService $userService
+     * @param LoggerInterface $logger
+     */
+    public function __construct(
+        MessageBusInterface $messageBus,
+        UserRepository $userRepository,
+        UserService $userService,
+        LoggerInterface $logger
+    )
     {
-        $requestContent = $request->request->all();
-
-        $respone = array();
-        $respone = $this->container
-                        ->get('user_api_processing_service')
-                        ->processCreateUserRequest($requestContent);
-
-        return View::create($respone, Response::HTTP_CREATED);
+        $this->messageBus     = $messageBus;
+        $this->userRepository = $userRepository;
+        $this->userService    = $userService;
+        $this->logger         = $logger;
     }
 
     /**
-     * @Rest\Get("/{id}")
+     * Function to handle User Create API request
+     * @Rest\Post("/user")
      * @param Request $request
      * @return View
+     * @throws \Exception
      */
-    public function getUserDetails(Request $request,$id)
+    public function registerUser(Request $request): View
     {
-        $requestContent = array();
-        $requestContent['id'] = $id;
+        try {
+            $user = new User();
+            $envelope = $this->messageBus->dispatch(new RegisterUserCommand($user, $request->request->all()));
+            /** @var User $user */
+            $user = $envelope->last(HandledStamp::class)->getResult();
+        } catch (ValidationFailedException $exception) {
+            throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
+        }
 
-        $respone = array();
-        $respone = $this->container
-                        ->get('user_api_processing_service')
-                        ->processgetUserDetailsRequest($requestContent);
-        return View::create($respone, Response::HTTP_OK);
+        return View::create($user, Response::HTTP_CREATED);
     }
 
     /**
-     * @Rest\Delete("/{id}")
+     * Function to handle User Update API request
+     * @Rest\Patch("/user/{id}")
      * @param Request $request
+     * @param $id
+     *
      * @return View
+     * @throws ORMException
      */
-    public function deleteUser(Request $request,$id)
+    public function updateUserDetails(Request $request, $id)
     {
-        $requestContent = array();
-        $requestContent['id'] = $id;
+        try {
+            $envelope = $this->messageBus->dispatch(new UpdateUserCommand($id, $request->request->all()));
+            $envelope->last(HandledStamp::class)->getResult();
+        } catch (ValidationFailedException $exception) {
+            throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
+        }
 
-        $respone = array();
-        $respone = $this->container
-                        ->get('user_api_processing_service')
-                        ->processDeleteUserRequest($requestContent);
-        return View::create($respone, Response::HTTP_OK);
+        return View::create(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
-     * @Rest\Patch("/{id}")
+     * Function to GET the details of user by using user id.
+     * @Rest\Get("/user/{id}")
      * @param Request $request
+     * @param $id
      * @return View
      */
-    public function UpdateUserDetails(Request $request,$id)
+    public function getUserDetails(Request $request, $id)
     {
+        return View::create($this->userService->findUserById($id), Response::HTTP_OK);
+    }
 
-        parse_str($request->getContent(),$requestContent);
-        $requestContent['id'] = $id;
-        $respone = array();
-        $respone = $this->container
-                        ->get('user_api_processing_service')
-                        ->processUpdateUserRequest($requestContent);
-        return View::create($respone, Response::HTTP_OK);
+    /**
+     * Function to handle User Delete API request
+     * @Rest\Delete("/user/{id}")
+     * @param Request $request
+     * @param $id
+     *
+     * @return View
+     * @throws ORMException
+     */
+    public function deleteUser(Request $request, $id)
+    {
+        $this->userService->deleteUser($id);
+        $this->userRepository->commit(); // Explicit Flush by the end of Operation.
+
+        return View::create(null, Response::HTTP_NO_CONTENT);
     }
 }

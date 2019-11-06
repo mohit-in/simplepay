@@ -1,0 +1,15 @@
+imports:
+  - { resource: "services.yaml"}
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  App\Tests\Scenario\Context\APIContext:
+    public: true
+    arguments:
+      - '%test_host%'
+      - "@service_container"
+
+

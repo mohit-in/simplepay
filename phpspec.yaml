@@ -1,0 +1,5 @@
+suites:
+  default:
+      src_path: '%paths.config%/src'
+      spec_path: "%paths.config%/tests"
+
