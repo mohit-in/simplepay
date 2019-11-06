@@ -2,13 +2,12 @@ pipeline {
     agent {
         dockerfile {
             dir 'docker/jenkins'
-            args '-v /root/app/logs/apache2:/var/log/apache2'
         }
     }
     stages {
         stage('build') {
             steps {
-                sh 'echo $PWD'
+                sh ''
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
                     sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/mohit-in/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"pending\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build is pending\"}'"
                 }

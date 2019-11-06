@@ -39,4 +39,7 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 
 COPY simplepay.conf /etc/apache2/sites-available/000-default.conf
 
+RUN a2enmod rewrite
+RUN service apache2 start
+
 WORKDIR /var/www
