@@ -2,6 +2,7 @@ pipeline {
     agent {
         dockerfile {
             dir 'docker/jenkins'
+            args '-v /opt/logs/apache2:/var/log/apache2'
         }
     }
     stages {
