@@ -26,7 +26,7 @@ pipeline {
                     sh 'mysql -h 172.17.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
                 }
                 sh 'echo "TEST_HOST=http://172.17.0.4/v1" >> .env.test'
-                sh 'composer install --dev'
+                sh 'composer install'
                 sh 'composer dump-env test'
             }
         }
