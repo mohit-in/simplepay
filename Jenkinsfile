@@ -16,10 +16,8 @@ pipeline {
                     sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.17.0.2:3306/simplepay" >> .env.test'
                     sh 'mysql -h 172.17.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
                 }
-                sh 'echo "TEST_HOST=http://172.17.0.4/v1" >> .env.test'
+                sh 'echo "TEST_HOST=http://localhost/v1" >> .env.test'
                 sh 'composer install --dev'
-                sh 'docker network inspect bridge'
-                sh 'docker container ls'
                 sh 'composer dump-env test'
             }
         }
@@ -27,7 +25,7 @@ pipeline {
             steps {
                 sh 'APP_ENV=test php bin/console cache:warmup'
                 sh 'php bin/console doctrine:migrations:migrate'
-                sh 'curl -XGET http://172.17.0.4/v1/user/1'
+                sh 'curl -XGET http://localhost/v1/user/1'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/simple-phpunit --exclude-group unit --log-junit phpunit.junit.xml'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
             }
