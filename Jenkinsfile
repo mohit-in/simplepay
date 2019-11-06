@@ -2,14 +2,13 @@ pipeline {
     agent {
         dockerfile {
             dir 'docker/jenkins'
-            args '-v $PWD:/var/www'
         }
     }
     stages {
         stage('Prepare Web Server') {
             steps {
                 sh 'rm -rf vendor/'
-                sh 'cp -r $PWD/ /var/www/'
+                sh 'cp -r $PWD/ /srv/'
                 sh 'a2enmod rewrite'
                 sh 'service apache2 start'
             }
@@ -34,7 +33,7 @@ pipeline {
             steps {
                 sh 'APP_ENV=test php bin/console cache:clear'
                 sh 'php bin/console doctrine:migrations:migrate'
-                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/simple-phpunit --exclude-group unit --log-junit phpunit.junit.xml'
+                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
             }
         }
