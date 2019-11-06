@@ -130,7 +130,7 @@ class APIContext implements Context
     public function request($httpMethod, $requestUri, PyStringNode $payLoad = null)
     {
         $httpMethod = strtoupper($httpMethod);
-        $urlPrefix = "v1";
+        $urlPrefix = '';
         try {
             $client = new Client([
                 'base_uri' => $this->baseUrl
