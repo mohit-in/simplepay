@@ -9,7 +9,7 @@ pipeline {
         stage('Prepare Web Server') {
             steps {
                 sh 'a2enmod rewrite'
-                sh 'service apache2 reload'
+                sh 'service apache2 start'
             }
         }
         stage('build') {
