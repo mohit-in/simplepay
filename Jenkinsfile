@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Prepare Web Server') {
             steps {
-                sh 'cp -r $PWD /var/www/'
+                sh 'cp -r $PWD/* /var/www/'
                 sh 'a2enmod rewrite'
                 sh 'service apache2 start'
             }
