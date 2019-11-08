@@ -4,7 +4,7 @@
 namespace App\Handler;
 
 
-use App\Command\TokenGenerationCommand;
+use App\Command\LoginUserCommand;
 use App\Service\UserService;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Class TokenGenerationHandler
  */
-class TokenGenerationHandler
+class LoginUserHandler
 {
     /**
      * @var ContainerInterface
@@ -39,13 +39,13 @@ class TokenGenerationHandler
     /**
      * Handle to token generation command.
      *
-     * @param TokenGenerationCommand $command
+     * @param LoginUserCommand $command
      *
      * @return string $token
      *
      * @throws JWTEncodeFailureException
      */
-    public function __invoke(TokenGenerationCommand $command)
+    public function __invoke(LoginUserCommand $command)
     {
         /* Find and verify user by email and password */
         $user = $this->userService->findUserByEmailPassword($command->getEmail(), $command->getPassword());

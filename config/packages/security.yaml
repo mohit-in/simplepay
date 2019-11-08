@@ -6,15 +6,12 @@ security:
         App\Entity\User:
             algorithm: 'bcrypt'
     firewalls:
-        dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
-            security: false
         register:
             pattern: /v1/user$
             stateless: true
             anonymous: true
         login:
-            pattern: /auth/user
+            pattern: /v1/user/login$
             stateless: true
             anonymous: true
         main:

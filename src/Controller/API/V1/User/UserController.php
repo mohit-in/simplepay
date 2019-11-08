@@ -2,12 +2,14 @@
 
 namespace App\Controller\API\V1\User;
 
+use App\Command\LoginUserCommand;
 use App\Command\RegisterUserCommand;
 use App\Command\UpdateUserCommand;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use Doctrine\ORM\ORMException;
+use Exception;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\View\View;
@@ -68,11 +70,14 @@ class UserController extends AbstractFOSRestController
     }
 
     /**
-     * Function to handle User Create API request
+     * Function to handle User Create API request.
+     *
      * @Rest\Post("/user", name="register_user")
+     *
      * @param Request $request
      * @return View
-     * @throws \Exception
+     *
+     * @throws Exception
      */
     public function registerUser(Request $request): View
     {
@@ -96,7 +101,7 @@ class UserController extends AbstractFOSRestController
      *
      * @return View
      */
-    public function updateUserDetails(Request $request, $id)
+    public function updateUserDetails(Request $request, $id): View
     {
         try {
             $envelope = $this->messageBus->dispatch(new UpdateUserCommand($id, $request->request->all()));
@@ -115,7 +120,7 @@ class UserController extends AbstractFOSRestController
      * @param $id
      * @return View
      */
-    public function getUserDetails(Request $request, $id)
+    public function getUserDetails(Request $request, $id): View
     {
         return View::create($this->userService->findUserById($id), Response::HTTP_OK);
     }
@@ -129,11 +134,37 @@ class UserController extends AbstractFOSRestController
      * @return View
      * @throws ORMException
      */
-    public function deleteUser(Request $request, $id)
+    public function deleteUser(Request $request, $id): View
     {
         $this->userService->deleteUser($id);
         $this->userRepository->commit(); // Explicit Flush by the end of Operation.
 
         return View::create(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Function to handle login user request.
+     *
+     * @Rest\Post("user/login" , name="login_user")
+     *
+     * @param Request $request
+     *
+     * @return View
+     *
+     */
+    public function generateToken(Request $request): View
+    {
+        try {
+            $envelope = $this->messageBus->dispatch( //call token generation command
+                new LoginUserCommand(
+                    $request->request->all()
+                )
+            );
+            $token = $envelope->last(HandledStamp::class)->getResult(); // return token
+        } catch (ValidationFailedException $exception) {
+            throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
+        }
+
+        return View::create($token, Response::HTTP_CREATED);
     }
 }

@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class TokenGenerationCommand
  */
-class TokenGenerationCommand
+class LoginUserCommand
 {
     /**
      * @var string $email
