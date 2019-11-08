@@ -5,8 +5,6 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     test_host: '%env(TEST_HOST)%'
-    jwt_key_pass_phrase: 'Mohit@321'
-
 services:
     # default configuration for services in *this* file
     _defaults:
