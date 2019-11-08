@@ -1,0 +1,28 @@
+security:
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        in_memory: { memory: null }
+    encoders:
+        App\Entity\User:
+            algorithm: 'bcrypt'
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        register:
+            pattern: /v1/user$
+            stateless: true
+            anonymous: true
+        login:
+            pattern: /auth/user
+            stateless: true
+            anonymous: true
+        main:
+            anonymous: true
+            stateless: true
+            guard:
+                authenticators:
+                    - App\Security\Authenticator
+    access_control:
+        # - { path: ^/admin, roles: ROLE_ADMIN }
+        # - { path: ^/profile, roles: ROLE_USER }

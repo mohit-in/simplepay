@@ -69,7 +69,7 @@ class UserController extends AbstractFOSRestController
 
     /**
      * Function to handle User Create API request
-     * @Rest\Post("/user")
+     * @Rest\Post("/user", name="register_user")
      * @param Request $request
      * @return View
      * @throws \Exception
@@ -95,7 +95,6 @@ class UserController extends AbstractFOSRestController
      * @param $id
      *
      * @return View
-     * @throws ORMException
      */
     public function updateUserDetails(Request $request, $id)
     {

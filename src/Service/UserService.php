@@ -5,7 +5,9 @@ namespace App\Service;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\ORMException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 /**
  * Class UserService
@@ -19,12 +21,19 @@ class UserService
     private $userRepository;
 
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
      * UserService constructor.
      * @param UserRepository $userRepository
+     * @param ContainerInterface $container
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, ContainerInterface $container)
     {
         $this->userRepository = $userRepository;
+        $this->container = $container;
     }
 
     /**
@@ -44,6 +53,29 @@ class UserService
 
         return $user;
     }
+
+    /**
+     * Function to Fetch User using Id.
+     * @param $email
+     * @param $password
+     * @return User
+     */
+    public function findUserByEmailPassword($email, $password): User
+    {
+        $user = $this->userRepository->findOneBy(['email' => $email]);
+        if (!$user) {
+            throw new NotFoundHttpException(sprintf('User does not exists with Email: %s', $email));
+        }
+        $isValid = $this->container->get('security.password_encoder')
+            ->isPasswordValid($user, $password);
+        if (!$isValid) {
+            throw new BadCredentialsException(sprintf("Invalid password"));
+        }
+
+        return $user;
+    }
+
+
 
     /**
      * Function to delete User.

@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Entity\Traits\EntityBaseTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Serializer\AccessorOrder("custom", custom = {"id", "uuid", "name", "email", "mobile"})
  */
-class User
+class User implements UserInterface
 {
     use EntityBaseTrait;
 
@@ -54,7 +56,7 @@ class User
      * @Assert\Length(min="6", minMessage="Password should be greater than or equal to 6 digit in length")
      * @Assert\NotNull()
      *
-     * @Serializer\Type("string")
+     * @Serializer\Exclude()
      */
     private $password;
 
@@ -82,6 +84,15 @@ class User
      * @Serializer\Type("string")
      */
     private $uuid;
+
+    /**
+     * @var array
+     *
+     * @ORM\Column(type="json")
+     *
+     * @Serializer\Type("array")
+     */
+    private $roles = [];
 
     /**
      * @return string
@@ -196,7 +207,7 @@ class User
      *
      * @return string|null
      */
-    public function getPassword(): ?string
+    public function getPassword()
     {
         return $this->password;
     }
@@ -232,5 +243,61 @@ class User
         $this->balance = $balance;
 
         return $this;
+    }
+
+    /**
+     * Returns the roles granted to the user.
+     *
+     *     public function getRoles()
+     *     {
+     *         return ['ROLE_USER'];
+     *     }
+     *
+     * Alternatively, the roles might be stored on a ``roles`` property,
+     * and populated in any number of different ways when the user object
+     * is created.
+     *
+     * @return array (Role|string)[] The user roles
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * Returns the salt that was originally used to encode the password.
+     *
+     * This can return null if the password was not encoded using a salt.
+     *
+     * @return string|null The salt
+     */
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    /**
+     * Returns the username used to authenticate the user.
+     *
+     * @return string The username
+     */
+    public function getUsername()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
     }
 }

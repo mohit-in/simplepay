@@ -2,6 +2,10 @@ v1_user:
     resource: ../../src/Controller/API/V1/User
     type: annotation
     prefix: v1
+user_auth:
+    resource: ../../src/Controller/Authentication
+    type: annotation
+    prefix: /auth
 #v1_transaction:
 #    resource: ../../src/Controller/API/V1/Transaction
 #    type: annotation
