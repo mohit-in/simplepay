@@ -10,6 +10,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderToken
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -78,7 +79,7 @@ class Authenticator extends AbstractGuardAuthenticator
             $data = $this->jwtEncoder->decode($credentials);
             return $this->userService->findUserById($data['id']);
         } catch (JWTDecodeFailureException $e) {
-            throw new HttpException(401, 'Invalid credentials');
+            throw new UnauthorizedHttpException('', 'Invalid credentials');
         }
     }
 
