@@ -35,10 +35,10 @@ pipeline {
             steps {
                 sh 'APP_ENV=test php bin/console cache:clear'
                 sh 'chmod -R 770 var/cache var/log'
-                sh 'php bin/console doctrine:migrations:migrate'
+                sh 'APP_ENV=test php bin/console doctrine:migrations:migrate'
                 sh 'curl -X POST --data \'{"name":"mohit","email":"mohit@gmail.com","mobile":"9999345816","password":"123456"}\' http://172.17.0.4/v1/user'
-                sh 'php -d memory_limit=-1 vendor/bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
-                sh 'php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
+                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
+                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
             }
         }
     }
