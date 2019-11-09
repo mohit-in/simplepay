@@ -13,7 +13,7 @@ Feature: Manage Users data
       "password": "123456"
     }
     """
-    Then the response code should "201"
+    Then the response code should be "201"
     And the response has property "name" "mohit"
     And I have an entity "User" with "email=mohit@gmail.com&mobile=9999345816"
 
@@ -21,7 +21,7 @@ Feature: Manage Users data
   Scenario: User can GET their personal data by their unique ID
     Given I have an entity "User" with "email=mohit@gmail.com"
     When I send a "GET" request to "/v1/user/1"
-    Then the response code should "200"
+    Then the response code should be "200"
     And the response has property "name" "mohit"
 
   @UpdateUserDetails
@@ -33,13 +33,13 @@ Feature: Manage Users data
       "name": "ashish"
     }
     """
-    Then the response code should "204"
+    Then the response code should be "204"
     And I have an entity "User" with "id=1&email=mohit@gmail.com&name=ashish"
 
   @DeleteUser
   Scenario: User can DELETE their personal data
     Given I have an entity "User" with "email=mohit@gmail.com"
     When I send a "DELETE" request to "/v1/user/1"
-    Then the response code should "204"
+    Then the response code should be "204"
     And I do not have an entity "User" with "id=1&email=mohit@gmail.com"
 

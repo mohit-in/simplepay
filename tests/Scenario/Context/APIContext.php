@@ -140,6 +140,7 @@ class APIContext implements Context
                 $urlPrefix.$requestUri,
                 ['json' => json_decode($payLoad)]
             );
+            var_dump($this->response->getStatusCode());exit;
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $this->response = $e->getResponse();
@@ -148,7 +149,7 @@ class APIContext implements Context
     }
 
     /**
-     * @Then the response code should :responseStatusCode
+     * @Then the response code should be :responseStatusCode
      * @param $responseStatusCode
      */
     public function theResponseCodeShould($responseStatusCode)
