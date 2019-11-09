@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Prepare Web Server') {
             steps {
-                sh 'rm -rf vendor/'
+//                 sh 'rm -rf vendor/'
                 sh 'cp -r $PWD/* /srv/'
                 sh 'a2enmod rewrite'
                 sh 'service apache2 start'
@@ -27,6 +27,7 @@ pipeline {
                 }
                 sh 'echo "TEST_HOST=http://172.17.0.4/v1" >> .env.test'
                 sh 'composer install'
+                sh 'composer dump-autoload'
                 sh 'composer dump-env test'
             }
         }
