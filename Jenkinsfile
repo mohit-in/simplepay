@@ -29,12 +29,14 @@ pipeline {
                 sh 'composer install'
                 sh 'composer dump-autoload'
                 sh 'composer dump-env test'
+                sh 'chmod 777 ./.env.local.php'
+                sh 'cat .env.local.php'
             }
         }
         stage('test') {
             steps {
                 sh 'APP_ENV=test php bin/console cache:clear'
-                sh 'chmod -R 770 var/cache var/log'
+                sh 'chmod -R 777 var/cache var/log'
                 sh 'APP_ENV=test php bin/console doctrine:migrations:migrate'
                 sh 'curl -X POST --data \'{"name":"mohit","email":"mohit@gmail.com","mobile":"9999345816","password":"123456"}\' http://172.17.0.4/v1/user'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
