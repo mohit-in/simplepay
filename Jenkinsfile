@@ -26,6 +26,7 @@ pipeline {
                     sh 'mysql -h 172.17.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
                 }
                 sh 'echo "TEST_HOST=http://172.17.0.4" >> .env.test'
+                sh 'chmod 777 .env .env.test'
                 sh '. ./.env'
                 sh '. ./.env.test'
                 sh 'composer dump-env test'
