@@ -140,7 +140,9 @@ class APIContext implements Context
                 $urlPrefix.$requestUri,
                 ['json' => json_decode($payLoad)]
             );
-            var_dump($this->response->getStatusCode());exit;
+            var_dump($this->response->getStatusCode());
+            var_dump($this->response->getBody());
+            exit;
         } catch (RequestException $e) {
             if ($e->hasResponse()) {
                 $this->response = $e->getResponse();
