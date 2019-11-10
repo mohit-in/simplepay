@@ -27,9 +27,9 @@ pipeline {
                 }
                 sh 'echo "TEST_HOST=http://172.17.0.4" >> .env.test'
                 sh 'composer install'
+                sh 'composer dump-env test'
                 sh 'APP_ENV=test php bin/console cache:clear'
                 sh 'chmod -R 770 var/cache var/log'
-                sh 'composer dump-env test'
             }
         }
         stage('test') {
