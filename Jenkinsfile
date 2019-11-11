@@ -2,7 +2,7 @@ pipeline {
     agent {
         dockerfile {
             dir 'docker/jenkins'
-            args '-v /opt/logs/apache2:/var/log/apache2'
+            args '-v $PWD:/srv'
         }
     }
     stages {
@@ -31,6 +31,7 @@ pipeline {
                 sh 'APP_ENV=test php bin/console cache:clear'
                 sh 'chmod -R 777 var/cache var/log'
                 sh 'cat .env'
+                sh 'pwd'
             }
         }
         stage('test') {
