@@ -27,8 +27,6 @@ pipeline {
                 }
                 sh 'echo "TEST_HOST=http://172.17.0.4" >> .env.test'
                 sh 'chmod 777 .env .env.test'
-                sh '. ./.env'
-                sh '. ./.env.test'
                 sh 'composer install --optimize-autoloader'
                 sh 'composer dump-env test'
                 sh 'ls -al'
