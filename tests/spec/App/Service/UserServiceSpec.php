@@ -3,16 +3,14 @@
 namespace spec\App\Service;
 
 use App\Entity\User;
-use App\Repository\DoctrineUnitOfWorkRepository;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use Doctrine\ORM\ORMException;
 use PhpSpec\ObjectBehavior;
 use PhpSpec\Wrapper\Collaborator;
 use Prophecy\Argument;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class UserApiProcessingServiceSpec
@@ -32,11 +30,11 @@ class UserServiceSpec extends ObjectBehavior
      * funtion to add dependencies for specs
      *
      * @param UserRepository|Collaborator $userRepository
-     * @param ContainerInterface $container
+     * @param UserPasswordEncoderInterface $passwordEncoder
      */
-    public function let(UserRepository $userRepository, ContainerInterface $container): void
+    public function let(UserRepository $userRepository, UserPasswordEncoderInterface $passwordEncoder): void
     {
-        $this->beConstructedWith($userRepository, $container);
+        $this->beConstructedWith($userRepository, $passwordEncoder);
     }
 
     /**

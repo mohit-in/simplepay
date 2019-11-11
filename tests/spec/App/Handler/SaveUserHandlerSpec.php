@@ -62,8 +62,8 @@ class SaveUserHandlerSpec extends ObjectBehavior
         $userRepository->findOneByEmail('mohit@gmail.com')->shouldBeCalled()->willReturn();
 
         $command->getUser()->shouldBeCalled()->willReturn($user);
+        $command->getUuid()->shouldBeCalled()->willReturn()->willReturn(Uuid::uuid1());
         $user->setUuid(Argument::any())->shouldBeCalled();
-
         $command->getName()->shouldBeCalled()->willReturn('mohit');
         $user->setName('mohit')->shouldBeCalled();
         $command->getEmail()->shouldBeCalled()->willReturn('mohit@gmail.com');
@@ -125,6 +125,7 @@ class SaveUserHandlerSpec extends ObjectBehavior
         $command->getId()->shouldBeCalled()->willReturn(1);
         $userService->findUserById(1)->shouldBeCalled()->willReturn($user);
 
+        $command->getUuid()->shouldBeCalled()->willReturn()->willReturn(Uuid::uuid1());
         $user->setUuid(Argument::any())->shouldBeCalled();
 
         $command->getName()->shouldBeCalled()->willReturn('mohit');
