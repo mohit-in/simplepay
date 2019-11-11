@@ -10,6 +10,7 @@ use Doctrine\ORM\ORMException;
 use PhpSpec\ObjectBehavior;
 use PhpSpec\Wrapper\Collaborator;
 use Prophecy\Argument;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -22,7 +23,7 @@ class UserServiceSpec extends ObjectBehavior
     /**
      * function to check class initializable behavior
      */
-    function it_is_initializable()
+    public function it_is_initializable(): void
     {
         $this->shouldHaveType(UserService::class);
     }
@@ -31,12 +32,11 @@ class UserServiceSpec extends ObjectBehavior
      * funtion to add dependencies for specs
      *
      * @param UserRepository|Collaborator $userRepository
-     * @param DoctrineUnitOfWorkRepository|Collaborator $unitOfWork
+     * @param ContainerInterface $container
      */
-    function let(UserRepository $userRepository, DoctrineUnitOfWorkRepository $unitOfWork)
+    public function let(UserRepository $userRepository, ContainerInterface $container): void
     {
-        $this->beConstructedWith($userRepository);
-
+        $this->beConstructedWith($userRepository, $container);
     }
 
     /**
@@ -45,7 +45,7 @@ class UserServiceSpec extends ObjectBehavior
      * @param UserRepository|Collaborator $userRepository
      * @param User|Collaborator $user
      */
-    function it_should_return_a_user_if_a_user_found_in_system(UserRepository $userRepository, User $user)
+    public function it_should_return_a_user_if_a_user_found_in_system(UserRepository $userRepository, User $user): void
     {
         $userRepository->find(Argument::any())->shouldBeCalled()->willReturn($user);
         $this->findUserById(1)->shouldReturn($user);
@@ -57,7 +57,7 @@ class UserServiceSpec extends ObjectBehavior
      * @param UserRepository|Collaborator $userRepository
      * @param User|Collaborator $user
      */
-    function it_should_throw_an_exception_if_no_user_found_in_system(UserRepository $userRepository, User $user)
+    public function it_should_throw_an_exception_if_no_user_found_in_system(UserRepository $userRepository, User $user): void
     {
         $userRepository->find(1)->shouldBeCalled()->willReturn(null);
         $this->shouldThrow(NotFoundHttpException::class)->during(
@@ -65,13 +65,13 @@ class UserServiceSpec extends ObjectBehavior
     }
 
     /**
-     * * funtion to process delete user request
+     * funtion to process delete user request
      *
      * @param UserRepository|Collaborator $userRepository
      * @param User|Collaborator $user
      * @throws ORMException
      */
-    function it_should_remove_a_user_if_a_user_found_in_system(UserRepository $userRepository, User $user)
+    public function it_should_remove_a_user_if_a_user_found_in_system(UserRepository $userRepository, User $user): void
     {
         $userRepository->find(1)->shouldBeCalled()->willReturn($user);
         $userRepository->remove($user)->shouldBeCalled();

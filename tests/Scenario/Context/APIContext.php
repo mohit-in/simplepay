@@ -73,8 +73,38 @@ class APIContext implements Context
      */
     public function iSendARequestToWithData ($requestMethod, $requestUri, PyStringNode $string)
     {
-        $this->request($requestMethod, $requestUri,$string);
+        $this->request($requestMethod, $requestUri, null, $string);
     }
+
+
+    /**
+     * @When I send a :requestMethod request to :requestUri with authorization token :authenticationToken
+     * @param $requestMethod
+     * @param $requestUri
+     * @param $authenticationToken
+     * @throws GuzzleException
+     */
+    public function iSendARequestToWithAuthorizationToken($requestMethod, $requestUri, $authenticationToken): void
+    {
+        $this->request($requestMethod, $requestUri, $authenticationToken);
+    }
+
+    /**
+     * @When I send a :requestMethod request to :requestUri with authorization token :authenticationToken and data
+     * @param $requestMethod
+     * @param $requestUri
+     * @param $authenticationToken
+     * @param PyStringNode $string
+     * @throws GuzzleException
+     */
+    public function iSendARequestToWithAuthorizationTokenAndData($requestMethod, $requestUri, $authenticationToken, PyStringNode $string): void
+    {
+        $this->request($requestMethod, $requestUri,$authenticationToken, $string);
+    }
+
+
+
+
 
     /**
      * Funtion to check entity for Given and Then scenario
@@ -83,7 +113,7 @@ class APIContext implements Context
      * @param $entity
      * @param $arguments
      */
-    public function iHaveAnEntityWith($entity, $arguments)
+    public function iHaveAnEntityWith($entity, $arguments): void
     {
         Assert::assertCount(1, $this->getResultByEntity($entity, $arguments));
     }
@@ -95,7 +125,7 @@ class APIContext implements Context
      * @param $entity
      * @param $arguments
      */
-    public function iDoNotHaveAnEntityWith($entity, $arguments)
+    public function iDoNotHaveAnEntityWith($entity, $arguments): void
     {
         Assert::assertCount(0,$this->getResultByEntity($entity, $arguments));
     }
@@ -127,10 +157,11 @@ class APIContext implements Context
      * @param PyStringNode|null $payLoad
      * @throws GuzzleException
      */
-    public function request($httpMethod, $requestUri, PyStringNode $payLoad = null)
+    public function request($httpMethod, $requestUri, $authrizationToken = null, PyStringNode $payLoad = null): void
     {
         $httpMethod = strtoupper($httpMethod);
-        $urlPrefix = "v1";
+        $urlPrefix = '';
+
         try {
             $client = new Client([
                 'base_uri' => $this->baseUrl
@@ -138,7 +169,10 @@ class APIContext implements Context
             $this->response = $client->request(
                 $httpMethod,
                 $urlPrefix.$requestUri,
-                ['json' => json_decode($payLoad)]
+                ['json' => json_decode($payLoad)],
+                ['auth' =>
+                    ['Bearer', $authrizationToken]
+                ]
             );
         } catch (RequestException $e) {
             if ($e->hasResponse()) {

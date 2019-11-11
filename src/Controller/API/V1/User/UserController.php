@@ -14,6 +14,7 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\View\View;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -95,13 +96,14 @@ class UserController extends AbstractFOSRestController
 
     /**
      * Function to handle User Update API request
-     * @Rest\Patch("/user/{id}")
+     * @Rest\Patch("/user/{id}", requirements={"id"="^[1-9][0-9]*"})
      * @param Request $request
-     * @param $id
+     * @param int $id
+     *
      *
      * @return View
      */
-    public function updateUserDetails(Request $request, $id): View
+    public function updateUserDetails(Request $request, int $id): View
     {
         try {
             $envelope = $this->messageBus->dispatch(new UpdateUserCommand($id, $request->request->all()));
@@ -115,26 +117,26 @@ class UserController extends AbstractFOSRestController
 
     /**
      * Function to GET the details of user by using user id.
-     * @Rest\Get("/user/{id}")
+     * @Rest\Get("/user/{id}", requirements={"id"="^[1-9][0-9]*"})
      * @param Request $request
-     * @param $id
+     * @param int $id
      * @return View
      */
-    public function getUserDetails(Request $request, $id): View
+    public function getUserDetails(Request $request, int $id): View
     {
         return View::create($this->userService->findUserById($id), Response::HTTP_OK);
     }
 
     /**
      * Function to handle User Delete API request
-     * @Rest\Delete("/user/{id}")
+     * @Rest\Delete("/user/{id}", requirements={"id"="^[1-9][0-9]*"})
      * @param Request $request
-     * @param $id
+     * @param int $id
      *
      * @return View
      * @throws ORMException
      */
-    public function deleteUser(Request $request, $id): View
+    public function deleteUser(Request $request, int $id): View
     {
         $this->userService->deleteUser($id);
         $this->userRepository->commit(); // Explicit Flush by the end of Operation.

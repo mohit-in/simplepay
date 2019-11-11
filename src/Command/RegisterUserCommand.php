@@ -21,6 +21,13 @@ class RegisterUserCommand
     private $id;
 
     /**
+     * @var Uuid $uuid
+     * @Assert\Type("Ramsey\Uuid\UuidInterface", message="Uuid should be of type uuid")
+     * @Serializer\Type("uuid")
+     */
+    private $uuid;
+
+    /**
      * @var string $name
      * @Assert\NotNull(message="Name must not be empty")
      * @Serializer\Type("string")
@@ -44,7 +51,10 @@ class RegisterUserCommand
 
     /**
      * @var string $mobile
+     *
      * @Assert\NotNull(message="Password must not be empty")
+     * @Assert\Length(min="6", minMessage="Password must be greater than or equal to six digit in length")
+     *
      * @Serializer\Type("string")
      */
     private $password;
@@ -65,10 +75,11 @@ class RegisterUserCommand
     {
         $this->user = $user;
 
-        $this->name = $arguments["name"];
-        $this->email = $arguments["email"];
-        $this->mobile = $arguments["mobile"];
-        $this->password = $arguments["password"];
+        $this->name = $arguments['name'];
+        $this->email = $arguments['email'];
+        $this->mobile = $arguments['mobile'];
+        $this->password = $arguments['password'];
+        $this->uuid = $arguments['uuid']??Uuid::uuid1();
     }
 
     /**
@@ -76,9 +87,17 @@ class RegisterUserCommand
      *
      * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @return Uuid
+     */
+    public function getUuid(): Uuid
+    {
+        return $this->uuid;
     }
 
 
@@ -87,7 +106,7 @@ class RegisterUserCommand
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -97,7 +116,7 @@ class RegisterUserCommand
      *
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -107,7 +126,7 @@ class RegisterUserCommand
      *
      * @return string
      */
-    public function getMobile()
+    public function getMobile(): string
     {
         return $this->mobile;
     }
@@ -117,7 +136,7 @@ class RegisterUserCommand
      *
      * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }

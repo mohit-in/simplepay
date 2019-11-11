@@ -7,6 +7,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 /**
@@ -21,19 +23,19 @@ class UserService
     private $userRepository;
 
     /**
-     * @var ContainerInterface
+     * @var UserPasswordEncoderInterface
      */
-    private $container;
+    private $passwordEncoder;
 
     /**
      * UserService constructor.
      * @param UserRepository $userRepository
-     * @param ContainerInterface $container
+     * @param UserPasswordEncoderInterface $passwordEncoder
      */
-    public function __construct(UserRepository $userRepository, ContainerInterface $container)
+    public function __construct(UserRepository $userRepository, UserPasswordEncoderInterface $passwordEncoder)
     {
         $this->userRepository = $userRepository;
-        $this->container = $container;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     /**
@@ -66,16 +68,14 @@ class UserService
         if (!$user) {
             throw new NotFoundHttpException(sprintf('User does not exists with Email: %s', $email));
         }
-        $isValid = $this->container->get('security.password_encoder')
+        $isValid = $this->passwordEncoder
             ->isPasswordValid($user, $password);
         if (!$isValid) {
-            throw new BadCredentialsException(sprintf("Invalid password"));
+            throw new BadCredentialsException(sprintf('Invalid password'));
         }
 
         return $user;
     }
-
-
 
     /**
      * Function to delete User.

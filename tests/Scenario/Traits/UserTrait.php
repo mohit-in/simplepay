@@ -45,8 +45,9 @@ trait UserTrait
 
         $this->entityManager->getConnection()->executeQuery("DELETE FROM user where id = 1 or email = 'mohit@gmail.com'");
         $uuid = Uuid::uuid1();
-        $this->entityManager->getConnection()->executeQuery("INSERT INTO user (id, uuid, name, email, mobile, password) 
-                            values (1, '$uuid', 'mohit', 'mohit@gmail.com', '9999345816', '123456')");
+        $roles = json_encode(array('ROLE_ADMIN'));
+        $this->entityManager->getConnection()->executeQuery("INSERT INTO user (id, uuid, name, email, mobile, password, roles) 
+                            values (1, '$uuid', 'mohit', 'mohit@gmail.com', '9999345816', '123456','$roles')");
     }
 
 }

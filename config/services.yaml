@@ -23,6 +23,10 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    #user_service:
+        #class: 'App\Service\UserService'
+        #arguments: [UserRepository,'@security.password_encoder']
+
     App\Handler\:
         resource: '../src/Handler'
         tags: ['messenger.message_handler']

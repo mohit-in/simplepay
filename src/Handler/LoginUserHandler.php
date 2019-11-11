@@ -6,6 +6,8 @@ namespace App\Handler;
 
 use App\Command\LoginUserCommand;
 use App\Service\UserService;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\LcobucciJWTEncoder;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTEncodeFailureException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -15,25 +17,26 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class LoginUserHandler
 {
     /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
      * @var UserService
      */
     private $userService;
+
+    /**
+     * @var ContainerInterface
+     */
+    private $JWTEncoder;
 
     /**
      * TokenGenerationHandler constructor.
      *
      * @param ContainerInterface $container
      * @param UserService $userService
+     * @param JWTEncoderInterface $JWTEncoder
      */
-    public function __construct(ContainerInterface $container, UserService $userService)
+    public function __construct(ContainerInterface $container, UserService $userService, JWTEncoderInterface $JWTEncoder)
     {
-        $this->container = $container;
         $this->userService = $userService;
+        $this->JWTEncoder = $JWTEncoder;
     }
 
     /**
@@ -50,7 +53,7 @@ class LoginUserHandler
         /* Find and verify user by email and password */
         $user = $this->userService->findUserByEmailPassword($command->getEmail(), $command->getPassword());
 
-        $token = $this->container->get('lexik_jwt_authentication.encoder')
+        $token = $this->JWTEncoder
             ->encode([
                 'id' => $user->getId(),
                 'exp' => time() + 3600 // 1 hour expiration

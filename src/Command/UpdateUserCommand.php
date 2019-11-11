@@ -20,6 +20,18 @@ class UpdateUserCommand
      */
     private $id;
 
+    /* Temporary variable */
+
+    private $uuid;
+
+    /**
+     * @return mixed
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
     /**
      * @var string $name
      *

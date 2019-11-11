@@ -44,6 +44,7 @@ class SaveUserHandler implements MessageSubscriberInterface
      * UserService constructor.
      * @param UserRepository $userRepository
      * @param UserService $userService
+     * @param UserPasswordEncoderInterface $passwordEncoder
      */
     public function __construct(UserRepository $userRepository, UserService $userService, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -65,13 +66,14 @@ class SaveUserHandler implements MessageSubscriberInterface
         }
         else {
             if (!empty($this->userRepository->findOneByEmail($command->getEmail()))) {
-                throw new ConflictHttpException("User exists with Email: ". $command->getEmail());
+                throw new ConflictHttpException(sprintf('User exists with Email: %s', $command->getEmail()));
             }
             $this->user = $command->getUser();
         }
 
-        $this->user->setUuid(Uuid::uuid1());
-
+        if (!empty($command->getUuid())) {
+            $this->user->setUuid($command->getUuid());
+        }
         if (!empty($command->getName())) {
             $this->user->setName($command->getName());
         }

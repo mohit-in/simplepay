@@ -77,6 +77,7 @@ class Authenticator extends AbstractGuardAuthenticator
     {
         try {
             $data = $this->jwtEncoder->decode($credentials);
+
             return $this->userService->findUserById($data['id']);
         } catch (JWTDecodeFailureException $e) {
             throw new UnauthorizedHttpException('', 'Invalid credentials');
