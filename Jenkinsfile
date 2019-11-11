@@ -2,7 +2,6 @@ pipeline {
     agent {
         dockerfile {
             dir 'docker/jenkins'
-            args '-v $PWD:/srv'
         }
     }
     stages {
