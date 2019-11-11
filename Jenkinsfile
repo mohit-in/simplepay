@@ -6,14 +6,6 @@ pipeline {
         }
     }
     stages {
-        stage('Prepare Web Server') {
-            steps {
-//                 sh 'rm -rf vendor/'
-                sh 'cp -r $PWD/* /srv/'
-                sh 'a2enmod rewrite'
-                sh 'service apache2 start'
-            }
-        }
         stage('build') {
             steps {
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
@@ -27,13 +19,20 @@ pipeline {
                 }
                 sh 'echo "TEST_HOST=http://172.17.0.4" >> .env.test'
                 sh 'composer install --optimize-autoloader'
+                sh 'composer dump-env test'
+                sh 'APP_ENV=test php bin/console cache:clear'
+                sh 'chmod -R 777 var/cache var/log'
+            }
+        }
+        stage('Prepare Web Server') {
+            steps {
+                sh 'cp -r $PWD/* /srv'
+                sh 'a2enmod rewrite'
+                sh 'service apache2 start'
             }
         }
         stage('test') {
             steps {
-                sh 'composer dump-env test'
-                sh 'APP_ENV=test php bin/console cache:clear'
-                sh 'chmod -R 777 var/cache var/log'
                 sh 'APP_ENV=test php bin/console doctrine:migrations:migrate'
 //                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
                 sh 'APP_ENV=test vendor/bin/behat tests/Scenario/Features/user.feature'
