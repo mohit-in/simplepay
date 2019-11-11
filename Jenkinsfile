@@ -31,7 +31,8 @@ pipeline {
                 sh '. ./.env.test'
                 sh 'composer install --optimize-autoloader'
                 sh 'composer dump-env test'
-                sh 'ls -al'
+                sh 'ls -al vendor/'
+                sh 'cat  vendor/autoload.php'
                 sh 'APP_ENV=test php bin/console cache:clear'
                 sh 'chmod -R 770 var/cache var/log'
             }
