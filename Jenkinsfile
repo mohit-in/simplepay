@@ -29,7 +29,7 @@ pipeline {
                 sh 'chmod 777 .env .env.test'
                 sh '. ./.env'
                 sh '. ./.env.test'
-                sh 'composer install --optimize-autoloader'
+                sh 'composer install'
                 sh 'composer dump-env test'
                 sh 'ls -al vendor/'
                 sh 'cat  vendor/autoload.php'
