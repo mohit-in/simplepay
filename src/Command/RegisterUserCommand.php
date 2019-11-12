@@ -71,10 +71,9 @@ class RegisterUserCommand
      * @param array $arguments
      * @throws Exception
      */
-    public function __construct(User $user, array $arguments = array())
+    public function __construct(User $user,  array  $arguments = [])
     {
         $this->user = $user;
-
         $this->name = $arguments['name'];
         $this->email = $arguments['email'];
         $this->mobile = $arguments['mobile'];

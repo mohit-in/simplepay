@@ -162,11 +162,11 @@ class UserController extends AbstractFOSRestController
                     $request->request->all()
                 )
             );
-            $token = $envelope->last(HandledStamp::class)->getResult(); // return token
+            $result['token'] = $envelope->last(HandledStamp::class)->getResult(); // return token
         } catch (ValidationFailedException $exception) {
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
         }
 
-        return View::create($token, Response::HTTP_CREATED);
+        return View::create($result, Response::HTTP_CREATED);
     }
 }
