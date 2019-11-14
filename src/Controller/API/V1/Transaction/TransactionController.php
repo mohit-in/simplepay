@@ -80,4 +80,17 @@ class TransactionController extends AbstractFOSRestController
         return View::create(null, Response::HTTP_CREATED);
     }
 
+    /**
+     * Function to handle refill wallet request
+     *
+     * @Rest\Get("/transaction/list")
+     *
+     * @param Request $request
+     * @return void
+     *
+     */
+    public function getTransactionList(Request $request): void
+    {
+        print_r($request->query->all());exit;
+    }
 }
