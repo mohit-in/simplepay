@@ -54,7 +54,6 @@ trait UserTrait
 
     private function insertUserInTheDatabase(): void
     {
-
         $this->entityManager->getConnection()->executeQuery("DELETE FROM user where id = 1 or email = 'mohit@gmail.com'");
         $uuid = Uuid::uuid1();
         $roles = json_encode(array('ROLE_ADMIN'));

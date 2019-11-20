@@ -48,9 +48,9 @@ class Authenticator extends AbstractGuardAuthenticator
      *
      * @return bool
      */
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
-        return false;
+        return true;
     }
 
     /**

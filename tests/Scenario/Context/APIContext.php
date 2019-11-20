@@ -3,6 +3,7 @@
 namespace App\Tests\Scenario\Context;
 
 use App\Entity\User;
+use App\Tests\Scenario\Traits\TransactionTrait;
 use App\Tests\Scenario\Traits\UserTrait;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\PyStringNode;
@@ -24,6 +25,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class APIContext implements Context
 {
     use UserTrait;
+    use TransactionTrait;
+
     /**
      * @var string
      */
@@ -166,8 +169,13 @@ class APIContext implements Context
                 $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $arguments['email']]);
                 $value = $this->passwordEncoder->encodePassword($user, $value);
             }
+            if ($value == 'null') {
+                $qb->andWhere('ent.'. $key .' is null');
+                continue;
+            }
             $qb->andWhere("ent." . $key . " = '$value'");
         }
+        #dump($qb->getQuery()->getSQL());
         return  $qb->getQuery()->getResult();
     }
 

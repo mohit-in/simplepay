@@ -4,6 +4,7 @@ namespace App\Controller\API\V1\Transaction;
 
 use App\Command\MoneyTransferCommand;
 use App\Command\WalletRefillCommand;
+use App\Service\TransactionService;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
@@ -25,12 +26,19 @@ class TransactionController extends AbstractFOSRestController
     private $messageBus;
 
     /**
+     * @var TransactionService
+     */
+    private $transactionService;
+
+    /**
      * TransactionController constructor.
      * @param MessageBusInterface $messageBus
+     * @param TransactionService $transactionService
      */
-    public function __construct(MessageBusInterface $messageBus)
+    public function __construct(MessageBusInterface $messageBus, TransactionService $transactionService)
     {
         $this->messageBus = $messageBus;
+        $this->transactionService = $transactionService;
     }
 
     /**
@@ -53,7 +61,7 @@ class TransactionController extends AbstractFOSRestController
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
         }
 
-        return View::create(null, Response::HTTP_CREATED);
+        return View::create(null, Response::HTTP_NO_CONTENT);
     }
 
 
@@ -77,20 +85,35 @@ class TransactionController extends AbstractFOSRestController
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
         }
 
-        return View::create(null, Response::HTTP_CREATED);
+        return View::create(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
-     * Function to handle refill wallet request
+     * Function to handle get transaction listing request.
      *
      * @Rest\Get("/transaction/list")
      *
      * @param Request $request
-     * @return void
      *
+     * @return View
      */
-    public function getTransactionList(Request $request): void
+    public function getTransactionList(Request $request): View
     {
-        print_r($request->query->all());exit;
+        $parameters = $this->transactionService->validateParameters($request->query->all());
+        return View::create($this->transactionService->findTransactionList($parameters), Response::HTTP_OK);
+    }
+
+    /**
+     * Function to handle get transaction details request.
+     *
+     * @Rest\Get("/transaction/{id}", requirements={"id"="^[1-9][0-9]*"})
+     *
+     * @param Request $request
+     *
+     * @return View
+     */
+    public function getTransactionDetails(Request $request, int $id): View
+    {
+        return View::create($this->transactionService->findTransactionDetails($id), Response::HTTP_OK);
     }
 }

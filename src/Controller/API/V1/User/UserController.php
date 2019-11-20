@@ -12,9 +12,10 @@ use Doctrine\ORM\ORMException;
 use Exception;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\FOSRestBundle;
 use FOS\RestBundle\View\View;
 use Psr\Log\LoggerInterface;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -22,12 +23,11 @@ use Symfony\Component\Messenger\Exception\ValidationFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
-
 /**
  * Class UserController
  * @package App\Controller\API\V1\User
  */
-class UserController extends AbstractFOSRestController
+class UserController extends FOSRestController
 {
     /**
      * @var MessageBusInterface
@@ -55,25 +55,26 @@ class UserController extends AbstractFOSRestController
      * @param MessageBusInterface $messageBus
      * @param UserRepository $userRepository
      * @param UserService $userService
-     * @param LoggerInterface $logger
+     * \
+     * @param LoggerInterface $cronLogger
      */
     public function __construct(
         MessageBusInterface $messageBus,
         UserRepository $userRepository,
         UserService $userService,
-        LoggerInterface $logger
+        LoggerInterface $cronLogger
     )
     {
         $this->messageBus     = $messageBus;
         $this->userRepository = $userRepository;
         $this->userService    = $userService;
-        $this->logger         = $logger;
+        $this->logger         = $cronLogger;
     }
 
     /**
      * Function to handle User Create API request.
      *
-     * @Rest\Post("/user", name="register_user")
+     * @Rest\Get("/user", name="register_user")
      *
      * @param Request $request
      * @return View
@@ -89,6 +90,10 @@ class UserController extends AbstractFOSRestController
             $user = $envelope->last(HandledStamp::class)->getResult();
         } catch (ValidationFailedException $exception) {
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
+        } catch (\Error $e) {
+            $logger = $this->container->get('monolog.handler.cron');
+            $logger->error($e->getMessage(), ['request data' =>$request->request->all()]);
+            return View::create(null, Response::HTTP_EARLY_HINTS);
         }
 
         return View::create($user, Response::HTTP_CREATED);
@@ -110,6 +115,9 @@ class UserController extends AbstractFOSRestController
             $envelope->last(HandledStamp::class)->getResult();
         } catch (ValidationFailedException $exception) {
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
+        } catch (\Error $e) {
+            $this->logger->error($e->getMessage(), ['request data' =>$request->request->all()]);
+            return View::create(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return View::create(null, Response::HTTP_NO_CONTENT);
@@ -165,6 +173,9 @@ class UserController extends AbstractFOSRestController
             $result['token'] = $envelope->last(HandledStamp::class)->getResult(); // return token
         } catch (ValidationFailedException $exception) {
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
+        } catch (\ErrorException $e) {
+            $this->logger->error($e->getMessage(), ['request data' =>$request->request->all()]);
+            return View::create(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return View::create($result, Response::HTTP_CREATED);

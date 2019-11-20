@@ -56,7 +56,7 @@ class LoginUserHandler
         $token = $this->JWTEncoder
             ->encode([
                 'id' => $user->getId(),
-                'exp' => time() + 3600 // 1 hour expiration
+                'exp' => time() + 7200 // 2 hour expiration
             ]);
 
         return $token;

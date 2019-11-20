@@ -12,7 +12,9 @@ use App\Service\UserService;
 use Doctrine\ORM\ORMException;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
+use Symfony\Component\Mime\Email;
 
 /**
  * Class TransactionHandler
@@ -33,16 +35,27 @@ class TransactionHandler implements MessageSubscriberInterface
     private $userService;
 
     /**
+     * @var MailerInterface
+     */
+    private $mailer;
+
+    /**
      * TransactionHandler constructor.
      * @param TransactionRepository $transactionRepository
      * @param UserService $userService
      * @param UserRepository $userRepository
      */
-    public function __construct(TransactionRepository $transactionRepository, UserService $userService, UserRepository $userRepository)
+    public function __construct(
+        TransactionRepository $transactionRepository,
+        UserService $userService,
+        UserRepository $userRepository,
+        MailerInterface $mailer
+    )
     {
         $this->transactionRepository = $transactionRepository;
         $this->userRepository = $userRepository;
         $this->userService = $userService;
+        $this->mailer = $mailer;
     }
 
     /**
@@ -79,6 +92,13 @@ class TransactionHandler implements MessageSubscriberInterface
 
         /* saving wallet refill transaction */
         $this->transactionRepository->save($transaction);
+
+        $email = (new Email())
+            ->from('admin@simplepay.com')
+            ->to($user->getEmail())
+            ->subject('Transfer Money - simplepay')
+            ->html('<p>Hi,'.$user->getName(). '<br> Your amount credited by'.$transaction->setAmount());
+        $this->mailer->send($email);
     }
 
     /**
@@ -116,5 +136,11 @@ class TransactionHandler implements MessageSubscriberInterface
         $transaction->setUuid(Uuid::uuid1());
         /* saving money transfer transaction */
         $this->transactionRepository->save($transaction);
+        $email = (new Email())
+            ->from('admin@simplepay.com')
+            ->to($sender->getEmail())
+            ->subject('Transfer Money - simplepay')
+            ->html('<p>Hi,'.$sender->getName(). '<br> Your amount debited by'.$transaction->setAmount());
+        $this->mailer->send($email);
     }
 }

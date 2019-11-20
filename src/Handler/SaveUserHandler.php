@@ -11,7 +11,9 @@ use App\Repository\UserRepository;
 use App\Service\UserService;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Messenger\Handler\MessageSubscriberInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -41,24 +43,45 @@ class SaveUserHandler implements MessageSubscriberInterface
     private $passwordEncoder;
 
     /**
+     * @var MailerInterface
+     */
+    private $mailer;
+
+    /**
      * UserService constructor.
      * @param UserRepository $userRepository
      * @param UserService $userService
      * @param UserPasswordEncoderInterface $passwordEncoder
+     * @param MailerInterface $mailer
      */
-    public function __construct(UserRepository $userRepository, UserService $userService, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(
+        UserRepository $userRepository,
+        UserService $userService,
+        UserPasswordEncoderInterface $passwordEncoder,
+        MailerInterface $mailer
+    )
     {
         $this->userRepository = $userRepository;
         $this->userService    = $userService;
         $this->passwordEncoder = $passwordEncoder;
+        $this->mailer = $mailer;
     }
 
+    /**
+     * @return iterable
+     */
     public static function getHandledMessages(): iterable
     {
         yield UpdateUserCommand::class => ['method' => '__invoke'];
         yield RegisterUserCommand::class => ['method' => '__invoke'];
     }
 
+    /**
+     * @param $command
+     * @return User
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     */
     public function __invoke($command)
     {
         if (!empty($command->getId())) {
@@ -88,7 +111,18 @@ class SaveUserHandler implements MessageSubscriberInterface
                 $this->passwordEncoder->encodePassword($this->user, $command->getPassword()));
         }
 
-        $this->userRepository->save($this->user);
+        #$this->userRepository->save($this->user);
+
+        if(!$command->getId()) {
+
+            $email = (new Email())
+                ->from('admin@simplepay.com')
+                ->to($this->user->getEmail())
+                ->subject('Thank you email for registration')
+                ->html('<p>Hi '.$this->user->getName().',<br> Thanks for registration in simplepay app</p>');
+
+            $this->mailer->send($email);
+        }
 
         return $this->user;
     }

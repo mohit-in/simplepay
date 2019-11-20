@@ -10,6 +10,9 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $cronLogger: '@monolog.logger.cron'
+            $appLogger: '@monolog.logger.app'
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -21,7 +24,7 @@ services:
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
         resource: '../src/Controller'
-        tags: ['controller.service_arguments']
+        tags: ['controller.service_arguments', 'monolog.handler.cron']
 
     #user_service:
         #class: 'App\Service\UserService'

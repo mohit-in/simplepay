@@ -1,10 +1,26 @@
 monolog:
+    channels: ['app', 'cron']
+
     handlers:
-        main:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
+        mailer:
+            type: 'shift_mailer'
+            from_email: 'mohitks.in@gmail.com'
+            to_email:   'ermohit2018@gmail.com'
+            subject: 'just for testing'
+        app:
+            type: rotating_file
+            max_files: 10
+            path: "%kernel.logs_dir%/%kernel.environment%.app.log"
             level: debug
-            channels: ["!event"]
+            channels: ["app"]
+        cron:
+            type: rotating_file
+            max_files: 10
+            path: "%kernel.logs_dir%/%kernel.environment%.cron.log"
+            level: debug
+            channels: ["cron"]
+
+            #formatter: 'monolog.formatter.json'
         # uncomment to get logging in your browser
         # you may have to allow bigger header sizes in your Web server configuration
         #firephp:

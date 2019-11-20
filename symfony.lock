@@ -90,6 +90,9 @@
     "doctrine/reflection": {
         "version": "v1.0.0"
     },
+    "egulias/email-validator": {
+        "version": "2.1.11"
+    },
     "friends-of-behat/symfony-extension": {
         "version": "2.0",
         "recipe": {
@@ -454,6 +457,15 @@
             "src/Kernel.php"
         ]
     },
+    "symfony/google-mailer": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "da7b29c169c9de4359a75be96d729438129d7d86"
+        }
+    },
     "symfony/http-client": {
         "version": "v4.3.5"
     },
@@ -471,6 +483,27 @@
     },
     "symfony/intl": {
         "version": "v4.3.5"
+    },
+    "symfony/mailer": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "6e5921f710bec05533f664e0b9a3d838545edd82"
+        },
+        "files": [
+            "config/packages/mailer.yaml"
+        ]
+    },
+    "symfony/mailgun-mailer": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "a2bc739b34862b926b8a58263fd3901297eec3b5"
+        }
     },
     "symfony/maker-bundle": {
         "version": "1.0",
@@ -597,6 +630,15 @@
     },
     "symfony/security-http": {
         "version": "v4.3.6"
+    },
+    "symfony/sendgrid-mailer": {
+        "version": "4.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "ed69bc442325accbf79e8c93e1ae88c9abe7fd12"
+        }
     },
     "symfony/service-contracts": {
         "version": "v1.1.7"
