@@ -19,13 +19,11 @@ pipeline {
                 sh 'echo "TEST_HOST=http://172.17.0.4" >> .env.test'
                 sh 'composer install --optimize-autoloader'
                 sh 'composer dump-env test'
-                sh 'APP_ENV=test php bin/console cache:clear'
                 sh 'chmod -R 777 var/cache var/log'
             }
         }
         stage('Prepare Web Server') {
             steps {
-                sh 'cp -r $PWD/* /srv'
                 sh 'a2enmod rewrite'
                 sh 'service apache2 start'
             }
