@@ -32,8 +32,8 @@ pipeline {
         stage('test') {
             steps {
                 sh 'APP_ENV=test php bin/console doctrine:migrations:migrate'
-//                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
-                sh 'APP_ENV=test vendor/bin/behat tests/Scenario/Features/user.feature'
+                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpspec run --format=junit > phpspec.junit.xml'
+                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
             }
         }
