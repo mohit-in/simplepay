@@ -6,10 +6,6 @@ require dirname(__DIR__).'/vendor/autoload.php';
 
 // Load cached env vars if the .env.local.dist.local.php file exists
 // Run "composer dump-env prod" to create it (requires symfony/flex >=1.2)
-var_dump(__DIR__);
-var_dump(dirname(__DIR__));
-var_dump(dirname(__DIR__).'/.env.local.php');
-var_dump(file_get_contents(dirname(__DIR__).'/.env.local.php'));
 if (is_array($env = @include dirname(__DIR__).'/.env.local.php')) {
     foreach ($env as $k => $v) {
         $_ENV[$k] = $_ENV[$k] ?? (isset($_SERVER[$k]) && 0 !== strpos($k, 'HTTP_') ? $_SERVER[$k] : $v);
