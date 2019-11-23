@@ -25,7 +25,7 @@ pipeline {
         stage('Prepare Web Server') {
             steps {
                 sh 'echo $PWD'
-                sh 'sed -i -e \'s/project_dir\/$PWD\/public/g\' /etc/apache2/sites-available/000-default.conf'
+                sh "sed -i -e 's/project_dir\/$PWD\/public/g' /etc/apache2/sites-available/000-default.conf"
                 sh 'a2enmod rewrite'
                 sh 'service apache2 start'
             }
