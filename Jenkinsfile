@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh "sed -i -e 's/project_dir${WORKSPACE.replace('/', '\\/')}\\/public/g' /etc/apache2/sites-available/000-default.conf"
+                sh "sed -i -e 's/project_dir/${WORKSPACE.replace('/', '\\/')}\\/public/g' /etc/apache2/sites-available/000-default.conf"
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
                     sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/mohit-in/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"pending\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build is pending\"}'"
                 }
