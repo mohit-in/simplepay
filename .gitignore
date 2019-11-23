@@ -16,15 +16,10 @@
 
 /.idea/*
 phpunit.junit.xml
+phpspec.junit.xml
 
 ###> symfony/phpunit-bridge ###
 .phpunit
 .phpunit.result.cache
 /phpunit.xml
 /behat.junit.xml
-###< symfony/phpunit-bridge ###
-
-###> phpunit/phpunit ###
-/phpunit.xml
-.phpunit.result.cache
-###< phpunit/phpunit ###

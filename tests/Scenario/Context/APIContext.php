@@ -130,7 +130,7 @@ class APIContext implements Context
     public function request($httpMethod, $requestUri, PyStringNode $payLoad = null)
     {
         $httpMethod = strtoupper($httpMethod);
-        $urlPrefix = "v1";
+        $urlPrefix = '';
         try {
             $client = new Client([
                 'base_uri' => $this->baseUrl
@@ -148,7 +148,7 @@ class APIContext implements Context
     }
 
     /**
-     * @Then the response code should :responseStatusCode
+     * @Then the response code should be :responseStatusCode
      * @param $responseStatusCode
      */
     public function theResponseCodeShould($responseStatusCode)

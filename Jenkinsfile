@@ -16,17 +16,24 @@ pipeline {
                     sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.17.0.2:3306/simplepay" >> .env.test'
                     sh 'mysql -h 172.17.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
                 }
-                sh 'echo "TEST_HOST=http://127.0.0.1/v1" >> .env.test'
-                sh 'composer install --dev'
+                sh 'echo "TEST_HOST=http://172.17.0.4" >> .env.test'
+                sh 'composer install --optimize-autoloader'
                 sh 'composer dump-env test'
+                sh 'chmod -R 777 var/cache var/log'
+            }
+        }
+        stage('Prepare Web Server') {
+            steps {
+                sh "sed -i -e 's/project_dir/${WORKSPACE.replace('/', '\\/')}\\/public/g' /etc/apache2/sites-available/000-default.conf"
+                sh 'a2enmod rewrite'
+                sh 'service apache2 start'
             }
         }
         stage('test') {
             steps {
-                sh 'APP_ENV=test php bin/console cache:warmup'
-                sh 'php bin/console doctrine:migrations:migrate'
-                sh 'curl -XGET http://127.0.0.1/v1/user/1'
-                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/simple-phpunit --exclude-group unit --log-junit phpunit.junit.xml'
+                sh 'APP_ENV=test php bin/console doctrine:migrations:migrate'
+                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpspec run --format=junit > phpspec.junit.xml'
+                sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
             }
         }
