@@ -16,8 +16,6 @@ pipeline {
                 withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
                     sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.18.0.2:3306/simplepay" >> .env.test'
                     sh 'mysql -h 172.18.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
-                    sh 'mysql -h 172.18.0.2 -u root -p$DB_PASS -e "GRANT ALL PRIVILEGES ON *.* TO \'root\'@\'%\';"'
-                    sh 'mysql -h 172.18.0.2 -u root -p$DB_PASS -e "FLUSH PRIVILEGES;'
                 }
                 sh 'echo "TEST_HOST=http://172.18.0.6" >> .env.test'
                 sh 'composer install --optimize-autoloader'
