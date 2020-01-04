@@ -67,10 +67,10 @@ services:
     image: sonarqube:lts
     container_name: simplepay-ccq-server-container
     volumes:
-      - ~/docker-volume/postgres/sonarqube_conf:/opt/sonarqube/conf
-      - ~/docker-volume/postgres/sonarqube_extensions:/opt/sonarqube/extensions
-      - ~/docker-volume/postgres/sonarqube_logs:/opt/sonarqube/logs
-      - ~/docker-volume/postgres/sonarqube_data:/opt/sonarqube/data
+      - ~/docker-volume/sonarqube/sonarqube_conf:/opt/sonarqube/conf
+      - ~/docker-volume/sonarqube/sonarqube_extensions:/opt/sonarqube/extensions
+      - ~/docker-volume/sonarqube/sonarqube_logs:/opt/sonarqube/logs
+      - ~/docker-volume/sonarqube/sonarqube_data:/opt/sonarqube/data
     environment:
       sonar.jdbc.username: ${SONAR_DB_USER_NAME}
       sonar.jdbc.password: ${SONAR_DB_USER_PASS}
