@@ -2,6 +2,7 @@ pipeline {
     agent {
         dockerfile {
             dir 'docker/jenkins'
+            args '--network=simplepay-net --ip=172.18.0.6'
         }
     }
     stages {
@@ -13,10 +14,10 @@ pipeline {
                 sh 'rm -rf var/cache/* var/log/*'
                 sh 'git clean -df && git reset --hard'
                 withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
-                    sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.17.0.2:3306/simplepay" >> .env.test'
-                    sh 'mysql -h 172.17.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
+                    sh 'echo "DATABASE_URL=mysql://root:$DB_PASS@172.18.0.2:3306/simplepay" >> .env.test'
+                    sh 'mysql -h 172.18.0.2 -u root -p$DB_PASS -e "create database simplepay;"'
                 }
-                sh 'echo "TEST_HOST=http://172.17.0.4" >> .env.test'
+                sh 'echo "TEST_HOST=http://172.18.0.6" >> .env.test'
                 sh 'composer install --optimize-autoloader'
                 sh 'composer dump-env test'
                 sh 'chmod -R 777 var/cache var/log'
@@ -41,7 +42,7 @@ pipeline {
     post {
         always {
             withCredentials([string(credentialsId: 'mysql_test_db_pass', variable: 'DB_PASS')]) {
-                sh 'mysql -h 172.17.0.2 -u root -p$DB_PASS -e "drop database simplepay;"'
+                sh 'mysql -h 172.18.0.2 -u root -p$DB_PASS -e "drop database simplepay;"'
             }
         }
         success {

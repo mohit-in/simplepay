@@ -1,0 +1,83 @@
+version: '3.7' # https://docs.docker.com/compose/compose-file/compose-versioning/
+
+networks:
+  simplepay-net:
+    name: simplepay-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: '172.18.0.0/16'
+
+services:
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ~/docker-volume/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_TEST_DB_ROOT_PASS}
+    container_name: simplepay-test-db
+    networks:
+      simplepay-net:
+        ipv4_address: '172.18.0.2'
+    ports:
+      - '3307:3306'
+    restart: on-failure
+    expose:
+      - 3307
+
+  jenkins:
+    image: jenkins/jenkins
+    volumes:
+      - ~/docker-volume/jenkins-data:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker:/usr/bin/docker
+    container_name: simplepay-ci-container
+    networks:
+      simplepay-net:
+        ipv4_address: '172.18.0.3'
+    ports:
+      - '8080:8080'
+    restart: on-failure
+    expose:
+      - 8080
+
+# Postgres for SonarQube Server DB Installation
+  postgres:
+    image: postgres:10
+    volumes:
+      - ~/docker-volume/postgres/data:/var/lib/postgresql/data
+    container_name: simplepay-ccq-db
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASS}
+      POSTGRES_USER: ${POSTGRES_SUPERUSER_NAME}
+      POSTGRES_DB: ${POSTGRES_SUPERUSER_DB}
+    networks:
+      simplepay-net:
+        ipv4_address: '172.18.0.4'
+    restart: on-failure
+    ports:
+      - '5432:5432'
+    expose:
+      - 5432
+
+# SonarQube Server Installation
+  sonar-server:
+    image: sonarqube:lts
+    container_name: simplepay-ccq-server-container
+    volumes:
+      - ~/docker-volume/postgres/sonarqube_conf:/opt/sonarqube/conf
+      - ~/docker-volume/postgres/sonarqube_extensions:/opt/sonarqube/extensions
+      - ~/docker-volume/postgres/sonarqube_logs:/opt/sonarqube/logs
+      - ~/docker-volume/postgres/sonarqube_data:/opt/sonarqube/data
+    environment:
+      sonar.jdbc.username: ${SONAR_DB_USER_NAME}
+      sonar.jdbc.password: ${SONAR_DB_USER_PASS}
+      sonar.jdbc.url: "jdbc:postgresql://172.18.0.4/${SONAR_DB_NAME}"
+    networks:
+      simplepay-net:
+        ipv4_address: '172.18.0.5'
+    restart: on-failure
+    ports:
+      - '9000:9000'
+    expose:
+      - 9000
