@@ -32,8 +32,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
     container_name: simplepay-ci-container
-    environment:
-      JENKINS_HOME: $HOME/docker-volume/jenkins-data
     networks:
       simplepay-net:
         ipv4_address: '172.18.0.3'
@@ -74,7 +72,6 @@ services:
       - $HOME/docker-volume/sonarqube/sonarqube_logs:/opt/sonarqube/logs
       - $HOME/docker-volume/sonarqube/sonarqube_data:/opt/sonarqube/data
     environment:
-      SONARQUBE_HOME: $HOME/docker-volume/sonarqube
       sonar.jdbc.username: ${SONAR_DB_USER_NAME}
       sonar.jdbc.password: ${SONAR_DB_USER_PASS}
       sonar.jdbc.url: "jdbc:postgresql://172.18.0.4/${SONAR_DB_NAME}"
