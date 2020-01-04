@@ -6,6 +6,12 @@ pipeline {
         }
     }
     stages {
+        stage('SonarQube analysis') {
+            def scannerHome = tool 'SonarScanner 2.1';
+            withSonarQubeEnv('Sonar CCQ Server') {
+              sh "${scannerHome}/bin/sonar-scanner"
+            }
+        }
         stage('build') {
             steps {
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
