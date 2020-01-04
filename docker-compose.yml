@@ -83,3 +83,5 @@ services:
       - '9000:9000'
     expose:
       - 9000
+    depends_on:
+      - postgres
