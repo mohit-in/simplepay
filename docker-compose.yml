@@ -12,7 +12,7 @@ services:
   mysql:
     image: mysql:5.7
     volumes:
-      - ~/docker-volume/mysql:/var/lib/mysql
+      - $HOME/docker-volume/mysql:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_TEST_DB_ROOT_PASS}
     container_name: simplepay-test-db
@@ -28,12 +28,12 @@ services:
   jenkins:
     image: jenkins/jenkins
     volumes:
-      - ~/docker-volume/jenkins-data:/var/jenkins_home
+      - $HOME/docker-volume/jenkins-data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
     container_name: simplepay-ci-container
     environment:
-      JENKINS_HOME: ~/docker-volume/jenkins-data
+      JENKINS_HOME: $HOME/docker-volume/jenkins-data
     networks:
       simplepay-net:
         ipv4_address: '172.18.0.3'
@@ -49,7 +49,7 @@ services:
   postgres:
     image: postgres:10
     volumes:
-      - ~/docker-volume/postgres/data:/var/lib/postgresql/data
+      - $HOME/docker-volume/postgres/data:/var/lib/postgresql/data
     container_name: simplepay-ccq-db
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASS}
@@ -69,12 +69,12 @@ services:
     image: sonarqube:lts
     container_name: simplepay-ccq-server-container
     volumes:
-      - ~/docker-volume/sonarqube/sonarqube_conf:/opt/sonarqube/conf
-      - ~/docker-volume/sonarqube/sonarqube_extensions:/opt/sonarqube/extensions
-      - ~/docker-volume/sonarqube/sonarqube_logs:/opt/sonarqube/logs
-      - ~/docker-volume/sonarqube/sonarqube_data:/opt/sonarqube/data
+      - $HOME/docker-volume/sonarqube/sonarqube_conf:/opt/sonarqube/conf
+      - $HOME/docker-volume/sonarqube/sonarqube_extensions:/opt/sonarqube/extensions
+      - $HOME/docker-volume/sonarqube/sonarqube_logs:/opt/sonarqube/logs
+      - $HOME/docker-volume/sonarqube/sonarqube_data:/opt/sonarqube/data
     environment:
-      SONARQUBE_HOME: ~/docker-volume/sonarqube
+      SONARQUBE_HOME: $HOME/docker-volume/sonarqube
       sonar.jdbc.username: ${SONAR_DB_USER_NAME}
       sonar.jdbc.password: ${SONAR_DB_USER_PASS}
       sonar.jdbc.url: "jdbc:postgresql://172.18.0.4/${SONAR_DB_NAME}"
