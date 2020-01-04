@@ -30,7 +30,7 @@ services:
     volumes:
       - ~/docker-volume/jenkins-data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-      - /usr/local/bin/docker:/usr/bin/docker
+      - /usr/bin/docker:/usr/bin/docker
     container_name: simplepay-ci-container
     networks:
       simplepay-net:
