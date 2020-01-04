@@ -37,9 +37,11 @@ services:
         ipv4_address: '172.18.0.3'
     ports:
       - '8080:8080'
+      - '50000:50000'
     restart: on-failure
     expose:
       - 8080
+      - 50000
 
 # Postgres for SonarQube Server DB Installation
   postgres:
