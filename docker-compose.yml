@@ -24,6 +24,7 @@ services:
     restart: on-failure
     expose:
       - 3307
+      - 3306
 
   jenkins:
     image: jenkins/jenkins
