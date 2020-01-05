@@ -28,6 +28,8 @@ services:
 
   jenkins:
     image: jenkins/jenkins
+    user: root
+    privileged: true
     volumes:
       - $HOME/docker-volume/jenkins-data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
