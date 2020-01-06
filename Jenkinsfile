@@ -8,6 +8,10 @@ pipeline {
     stages {
         stage('build') {
             steps {
+                def scannerHome = tool 'SonarScanner 4.2'
+                withSonarQubeEnv('Sonar CCQ Server') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
                     sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/mohit-in/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"pending\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build is pending\"}'"
                 }
