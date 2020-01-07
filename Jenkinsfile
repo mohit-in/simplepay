@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('SonarQube Analysis') {
             steps {
-                node {
+                script {
                     def scannerHome = tool 'SonarScanner 4.2';
                     withSonarQubeEnv('Sonar CCQ Server') {
                         sh "${scannerHome}/bin/sonar-scanner"
