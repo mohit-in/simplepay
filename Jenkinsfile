@@ -7,9 +7,6 @@ pipeline {
     }
     stages {
         stage('SonarQube Analysis') {
-            agent {
-                docker 'maven:3-alpine'
-            }
             steps {
                 script {
                     def scannerHome = tool 'SonarScanner';
