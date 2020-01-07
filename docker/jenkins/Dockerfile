@@ -39,10 +39,11 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
 
 COPY simplepay.conf /etc/apache2/sites-available/000-default.conf
 
+# Install Java.
 RUN \
   apt-get update && \
-  apt-get install -y default-jdk
-
+  apt-get install -y openjdk-7-jdk && \
+  rm -rf /var/lib/apt/lists/*
 
 # Define commonly used JAVA_HOME variable
-ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64
+ENV JAVA_HOME /usr/lib/jvm/java-7-openjdk-amd64
