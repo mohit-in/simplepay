@@ -7,6 +7,9 @@ pipeline {
     }
     stages {
         stage('SonarQube Analysis') {
+            environment {
+                JAVA_HOME = '/usr/local/openjdk-8'
+            }
             steps {
                 script {
                     def scannerHome = tool 'SonarScanner';
