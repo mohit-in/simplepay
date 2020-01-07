@@ -11,6 +11,7 @@ pipeline {
                 script {
                     def scannerHome = tool 'SonarScanner';
                     withSonarQubeEnv('Sonar CCQ Server') {
+                        sh 'echo $JAVA_HOME'
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
