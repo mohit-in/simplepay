@@ -1,4 +1,5 @@
 FROM php:7.1-apache
+FROM openjdk:8-jdk-stretch
 
 RUN echo 'memory_limit = 512M' > /usr/local/etc/php/php.ini
 
@@ -38,5 +39,3 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     bcmath
 
 COPY simplepay.conf /etc/apache2/sites-available/000-default.conf
-
-FROM openjdk:8-jdk-stretch
