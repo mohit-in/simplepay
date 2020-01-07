@@ -8,8 +8,7 @@ pipeline {
     stages {
         stage('SonarQube Analysis') {
             environment {
-                JAVA_HOME = '/usr/bin/openjdk-8'
-                PATH = "$JAVA_HOME/bin:$PATH"
+                JAVA_HOME = '/usr/bin/openjdk-8/bin'
             }
             steps {
                 script {
