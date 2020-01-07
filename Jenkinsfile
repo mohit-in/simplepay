@@ -2,13 +2,13 @@ pipeline {
     agent {
         dockerfile {
             dir 'docker/jenkins'
-            args '--network=simplepay-net --ip=172.18.0.6 -v /usr/local/openjdk-8:/usr/local/openjdk-8'
+            args '--network=simplepay-net --ip=172.18.0.6 -v $JAVA_HOME:/usr/bin/openjdk-8'
         }
     }
     stages {
         stage('SonarQube Analysis') {
             environment {
-                JAVA_HOME = '/usr/local/openjdk-8'
+                JAVA_HOME = '/usr/bin/openjdk-8'
             }
             steps {
                 script {
