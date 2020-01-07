@@ -8,13 +8,14 @@ pipeline {
     stages {
         stage('SonarQube Analysis') {
             environment {
-                JAVA_HOME = '/usr/bin/openjdk-8/bin'
+                JAVA_HOME = '/usr/bin/openjdk-8'
             }
             steps {
                 script {
                     def scannerHome = tool 'SonarScanner';
                     withSonarQubeEnv('Sonar CCQ Server') {
                         sh 'echo $JAVA_HOME'
+                        sh 'ls $JAVA_HOME/bin -al '
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
                 }
