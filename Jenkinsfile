@@ -40,6 +40,7 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
+                sh 'echo "sonar.branch.name=\$(git rev-parse --abbrev-ref HEAD)" >> sonar-project.properties'
                 script {
                     def scannerHome = tool 'SonarScanner';
                     withSonarQubeEnv('Sonar CCQ Server') {
