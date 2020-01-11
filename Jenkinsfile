@@ -9,7 +9,7 @@ pipeline {
         stage('build') {
             steps {
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
-                    sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/mohit-in/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"pending\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build is pending\"}'"
+                    sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/ashishkumar68/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"pending\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build is pending\"}'"
                 }
                 sh 'rm -rf var/cache/* var/log/*'
                 sh 'git clean -df && git reset --hard'
@@ -60,12 +60,12 @@ pipeline {
         }
         success {
             withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
-                sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/mohit-in/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"success\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build succeeded\"}'"
+                sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/ashishkumar68/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"success\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build succeeded\"}'"
             }
         }
         failure {
             withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
-                sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/mohit-in/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"failure\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build failed\"}'"
+                sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/ashishkumar68/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"failure\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build failed\"}'"
             }
         }
     }
