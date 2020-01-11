@@ -5,15 +5,11 @@ pipeline {
             args '--network=simplepay-net --ip=172.18.0.6'
         }
     }
-    parameters {
-        string(defaultValue: 'master', description: 'branch', name: 'GIT_BRANCH')
-    }
     stages {
         stage('build') {
             steps {
                 withEnv(["GIT_BRANCH=$BRANCH_NAME"]) {
-                   sh 'echo ${params.GIT_BRANCH}'
-                   sh 'echo GIT_BRANCH'
+                   sh 'echo $BRANCH_NAME'
                 }
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
                     sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/mohit-in/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"pending\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build is pending\"}'"
