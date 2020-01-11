@@ -8,9 +8,6 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                withEnv(["GIT_BRANCH=$BRANCH_NAME"]) {
-                   sh 'echo $BRANCH_NAME'
-                }
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
                     sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/mohit-in/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"pending\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build is pending\"}'"
                 }
@@ -43,8 +40,7 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                sh "echo 'sonar.branch.name=\$(git rev-parse --abbrev-ref HEAD)' >> sonar-project.properties"
-                sh '$(git rev-parse --abbrev-ref HEAD)'
+                sh "echo 'sonar.branch.name=$BRANCH_NAME >> sonar-project.properties"
                 sh 'cat sonar-project.properties'
                 script {
                     def scannerHome = tool 'SonarScanner';
