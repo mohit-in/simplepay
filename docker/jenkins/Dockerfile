@@ -7,6 +7,8 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && mv composer.phar /usr/local/bin/composer \
   && rm composer-setup.php
 
+RUN dpkg --configure -a
+
 RUN apt-get update \
   && apt-get install -y \
      default-mysql-client \
