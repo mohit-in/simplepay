@@ -27,7 +27,7 @@ RUN apt-get update \
      openjdk-11-jdk
 
 RUN echo 'JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/bin/"' > /etc/environment
-RUN source /etc/environment
+RUN . /etc/environment
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
   && docker-php-ext-configure opcache --enable-opcache \
