@@ -9,7 +9,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 
 RUN apt-get update \
   && apt-get install -y \
-     mysql-client \
+     default-mysql-client \
      libfreetype6-dev \
      libjpeg62-turbo-dev \
      libicu-dev \
