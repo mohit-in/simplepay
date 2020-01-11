@@ -11,7 +11,6 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'echo ${env.BRANCH_NAME}'
                 withEnv(["GIT_BRANCH=$BRANCH_NAME"]) {
                    sh 'echo ${params.GIT_BRANCH}'
                    sh 'echo GIT_BRANCH'
