@@ -7,10 +7,17 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && mv composer.phar /usr/local/bin/composer \
   && rm composer-setup.php
 
-RUN apt remove
+RUN apt-get update \
+  && apt-get install -y \
+     software-properties-common
+
+RUN add-apt-repository ppa:openjdk-r/ppa
+
+RUN mkdir -p /usr/share/man/man1
 
 RUN apt-get update \
-  && apt-get install -y -f \
+  && apt-get install -y \
+     openjdk-8-jdk \
      default-mysql-client \
      libfreetype6-dev \
      libjpeg62-turbo-dev \
@@ -22,10 +29,9 @@ RUN apt-get update \
      git \
      libmcrypt-dev \
      zip \
-     unzip \
-     openjdk-11-jdk
+     unzip
 
-RUN echo 'JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/bin/"' > /etc/environment
+RUN echo 'JAVA_HOME="/usr/lib/jvm/java-8-openjdk-amd64/bin/"' > /etc/environment
 RUN source /etc/environment
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
