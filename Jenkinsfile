@@ -40,9 +40,9 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                sh '''
-                   echo "sonar.branch.name=$(git rev-parse --abbrev-ref HEAD)" >> sonar-project.properties
-                   '''
+                sh 'echo "sonar.branch.name=\$(git rev-parse --abbrev-ref HEAD)" >> sonar-project.properties'
+                sh '$(git rev-parse --abbrev-ref HEAD)'
+                sh '$\(git rev-parse --abbrev-ref HEAD)'
                 sh 'cat sonar-project.properties'
                 script {
                     def scannerHome = tool 'SonarScanner';
