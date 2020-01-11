@@ -6,6 +6,16 @@ pipeline {
         }
     }
     stages {
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    def scannerHome = tool 'SonarScanner';
+                    withSonarQubeEnv('Sonar CCQ Server') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        }
         stage('build') {
             steps {
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
@@ -36,16 +46,6 @@ pipeline {
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpspec run --format=junit > phpspec.junit.xml'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/phpunit --exclude-group unit --log-junit phpunit.junit.xml'
                 sh 'APP_ENV=test php -d memory_limit=-1 vendor/bin/behat --strict --stop-on-failure --format progress --out std --format junit --out behat.junit.xml'
-            }
-        }
-        stage('SonarQube Analysis') {
-            steps {
-                script {
-                    def scannerHome = tool 'SonarScanner';
-                    withSonarQubeEnv('Sonar CCQ Server') {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
             }
         }
     }
