@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'env.BRANCH_NAME'
+                sh '${env.BRANCH_NAME}'
                 sh '${GIT_BRANCH}'
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
                     sh "curl -XPOST -H 'Authorization: token $TOKEN' https://api.github.com/repos/mohit-in/simplepay/statuses/\$(git rev-parse HEAD) -d '{\"state\":\"pending\",\"target_url\":\"${BUILD_URL}\",\"description\": \"The build is pending\"}'"
