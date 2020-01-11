@@ -7,10 +7,10 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && mv composer.phar /usr/local/bin/composer \
   && rm composer-setup.php
 
-RUN dpkg --configure -a
+RUN apt remove
 
 RUN apt-get update \
-  && apt-get install -y \
+  && apt-get install -y -f \
      default-mysql-client \
      libfreetype6-dev \
      libjpeg62-turbo-dev \
