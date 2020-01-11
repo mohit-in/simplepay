@@ -7,8 +7,11 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
   && mv composer.phar /usr/local/bin/composer \
   && rm composer-setup.php
 
+RUN mkdir -p /usr/share/man/man1
+
 RUN apt-get update \
   && apt-get install -y \
+     software-properties-common \
      default-mysql-client \
      libfreetype6-dev \
      libjpeg62-turbo-dev \
@@ -20,7 +23,11 @@ RUN apt-get update \
      git \
      libmcrypt-dev \
      zip \
-     unzip
+     unzip \
+     openjdk-11-jdk
+
+RUN echo 'JAVA_HOME="/usr/lib/jvm/java-11-openjdk-amd64/bin/"' > /etc/environment
+RUN . /etc/environment
 
 RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
   && docker-php-ext-configure opcache --enable-opcache \
@@ -38,5 +45,3 @@ RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-di
     bcmath
 
 COPY simplepay.conf /etc/apache2/sites-available/000-default.conf
-
-WORKDIR /srv
