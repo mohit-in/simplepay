@@ -40,8 +40,9 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                sh "echo 'sonar.branch.name=$BRANCH_NAME' >> sonar-project.properties"
-                sh 'cat sonar-project.properties'
+                // un-comment the below script if you are using sonarqube developer or above edition to see
+                // branch wise code quality analysis.
+                // sh "echo 'sonar.branch.name=$BRANCH_NAME' >> sonar-project.properties"
                 script {
                     def scannerHome = tool 'SonarScanner';
                     withSonarQubeEnv('Sonar CCQ Server') {
