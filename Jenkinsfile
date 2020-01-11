@@ -5,10 +5,15 @@ pipeline {
             args '--network=simplepay-net --ip=172.18.0.6'
         }
     }
+    parameters {
+        string(defaultValue: 'master', description: 'branch', name: 'GIT_BRANCH')
+    }
     stages {
         stage('build') {
             steps {
+                sh 'echo ${env.BRANCH_NAME}'
                 withEnv(["GIT_BRANCH=$BRANCH_NAME"]) {
+                   sh 'echo ${params.GIT_BRANCH}'
                    sh 'echo GIT_BRANCH'
                 }
                 withCredentials([string(credentialsId: 'simple_pay_ashish_token', variable: 'TOKEN')]) {
