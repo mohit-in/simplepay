@@ -31,7 +31,7 @@ services:
     user: root
     privileged: true
     volumes:
-      - $HOME/docker-volume/jenkins-data:/var/jenkins_home
+      - /opt/jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
       - /usr/bin/docker:/usr/bin/docker
     container_name: simplepay-ci-container
