@@ -1,0 +1,13 @@
+nelmio_api_doc:
+    documentation:
+        #host: api.simplepay.com
+        schemes: [http, https]
+        info:
+            title: SimplePay App
+            description: This App is for the wallet to wallet money transfer!
+            version: 1.0.0
+    #areas: # to filter documented areas
+        #path_patterns:
+            #- ^/v1/ # Accepts routes under /api except /api/doc
+    models:
+        use_jms: true

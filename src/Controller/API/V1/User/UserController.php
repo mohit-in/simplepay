@@ -18,6 +18,16 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Messenger\Exception\ValidationFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
+use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\Model as ModelAnnotation;
+use Nelmio\ApiDocBundle\Model\Model;
+use Nelmio\ApiDocBundle\Model\ModelRegistry;
+use Swagger\Analysis;
+use Swagger\Annotations\AbstractAnnotation;
+use Swagger\Annotations\Items;
+use Swagger\Annotations\Parameter;
+use Swagger\Annotations\Schema;
+
 
 
 /**
@@ -69,9 +79,13 @@ class UserController extends AbstractFOSRestController
 
     /**
      * Function to handle User Create API request
+     *
      * @Rest\Post("/user")
+     *
      * @param Request $request
+     *
      * @return View
+     *
      * @throws \Exception
      */
     public function registerUser(Request $request): View
@@ -111,9 +125,22 @@ class UserController extends AbstractFOSRestController
 
     /**
      * Function to GET the details of user by using user id.
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns the rewards of an user",
+     *     @SWG\Schema(
+     *         type="array",
+     *         @SWG\Items(ref=@ModelAnnotation(type=User::class))
+     *     )
+     * )
+     * @SWG\Tag(name="Users")
+     *
      * @Rest\Get("/user/{id}")
+     *
      * @param Request $request
+     *
      * @param $id
+     *
      * @return View
      */
     public function getUserDetails(Request $request, $id)
