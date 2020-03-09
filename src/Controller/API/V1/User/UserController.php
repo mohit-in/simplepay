@@ -5,6 +5,7 @@ namespace App\Controller\API\V1\User;
 use App\Command\RegisterUserCommand;
 use App\Command\UpdateUserCommand;
 use App\Entity\User;
+use App\Message\AddPonkaToImage;
 use App\Repository\UserRepository;
 use App\Service\UserService;
 use Doctrine\ORM\ORMException;
@@ -118,6 +119,9 @@ class UserController extends AbstractFOSRestController
      */
     public function getUserDetails(Request $request, $id)
     {
+        $message = new AddPonkaToImage();
+        $this->messageBus->dispatch($message);
+
         return View::create($this->userService->findUserById($id), Response::HTTP_OK);
     }
 

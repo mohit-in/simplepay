@@ -22,6 +22,7 @@
         "symfony/maker-bundle": "^1.13",
         "symfony/messenger": "4.3.*",
         "symfony/orm-pack": "^1.0",
+        "symfony/twig-pack": "^1.0",
         "symfony/validator": "4.3.*",
         "symfony/var-dumper": "4.3.*",
         "symfony/web-server-bundle": "4.3.*",
@@ -71,7 +72,8 @@
     "extra": {
         "symfony": {
             "allow-contrib": true,
-            "require": "4.3.*"
+            "require": "4.3.*",
+            "id": "01E112X87WZ72NTXZG3M0ZSY3B"
         }
     }
 }
