@@ -12,22 +12,23 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="App\Repository\TransactionRepository")
  * @ORM\HasLifecycleCallbacks
  *
+ * @Serializer\AccessorOrder("custom", custom = {"id", "uuid", "senderId", "receiverId", "amount", "status"})
  */
 class Transaction
 {
     use EntityBaseTrait;
 
-    const WalletRefill = 1;
-    const WalletTransfer = 2;
-
-    const Success = 1;
-    const Pending = 0;
-    const Failed = -1;
+    public const WalletRefill = 1;
+    public const WalletTransfer = 2;
+    public const Success = 1;
+    public const Pending = 0;
+    public const Failed = -1;
 
     /**
      * @var Uuid $uuid
      *
      * @ORM\Column(type="uuid", length=255)
+     *
      * @Serializer\Type("string")
      */
     private $uuid;
@@ -38,18 +39,23 @@ class Transaction
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(name="sender_id", referencedColumnName="id", onDelete="CASCADE")
      * @ORM\Column(type="integer", length=255)
+     *
      * @Serializer\Type("int")
      */
     private $senderId;
+
     /**
      * @var integer $receiver
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
      * @ORM\JoinColumn(name="receiver_id", referencedColumnName="id", onDelete="CASCADE")
      * @ORM\Column(type="integer", nullable=true, length=255)
+     *
      * @Serializer\Type("int")
      */
+
     private $receiverId;
+
     /**
      * @var integer $type
      *
@@ -57,20 +63,25 @@ class Transaction
      * @Serializer\Type("string")
      */
     private $type;
+
     /**
      * @var float $amount
      *
      * @ORM\Column(type="float", length=255)
      * @Assert\GreaterThan(0, message="Amount must not be greater than zero")
+     *
      * @Serializer\Type("float")
      */
     private $amount;
+
     /**
      * @var $status
      *
      * @ORM\Column(type="integer", length=10,  options={"default" : "1"})
      *
      * @Assert\Choice({"1", "0", "-1"})
+     *
+     * @Serializer\Type("int")
      */
     private $status = self::Success;
 
@@ -125,9 +136,9 @@ class Transaction
     /**
      * @return int
      */
-    public function getType(): int
+    public function getType()
     {
-        return $this->type;
+        return self::$this->type;
     }
 
     /**
@@ -169,7 +180,4 @@ class Transaction
     {
         $this->status = $status;
     }
-
-
-
 }

@@ -19,32 +19,32 @@ class TransactionRepository extends  DoctrineUnitOfWorkRepository
         parent::__construct($registry, Transaction::class);
     }
 
-    // /**
-    //  * @return Transaction[] Returns an array of Transaction objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findTransactionList(array $parameters = [])
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Transaction
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        $qb = $this->createQueryBuilder('t');
+        if(isset($parameters['senderId'])) {
+            $qb->andWhere('t.senderId = :senderId')
+                ->setParameter('senderId', $parameters['senderId']);
+        }
+        if(isset($parameters['receiverId'])) {
+            $qb->andWhere('t.receiverId = :receiverId')
+                ->setParameter('receiverId', $parameters['receiverId']);
+        }
+        if (isset($parameters['orderBy'])) {
+            foreach ($parameters['orderBy'] as $key => $value) {
+                $qb->addOrderBy('t.'.$key, $value);
+            }
+        }
+        if(isset($parameters['offset'])) {
+            $qb->setFirstResult($parameters['offset']);
+        }
+        if(isset($parameters['limit'])) {
+            $qb->setMaxResults($parameters['limit']);
+        }
+
+        return $qb->getQuery()
+            ->getResult();
+
     }
-    */
 }

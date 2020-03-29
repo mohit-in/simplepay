@@ -54,13 +54,12 @@ trait UserTrait
 
     private function insertUserInTheDatabase(): void
     {
-
         $this->entityManager->getConnection()->executeQuery("DELETE FROM user where id = 1 or email = 'mohit@gmail.com'");
         $uuid = Uuid::uuid1();
         $roles = json_encode(array('ROLE_ADMIN'));
         $password = $this->passwordEncoder->encodePassword(new User(), 123456);
-        $this->entityManager->getConnection()->executeQuery("INSERT INTO user (id, uuid, name, email, mobile, password, roles) 
-                            values (1, '$uuid', 'mohit', 'mohit@gmail.com', '9999345816', '$password','$roles')");
+        $this->entityManager->getConnection()->executeQuery("INSERT INTO user (id, uuid, balance, name, email, mobile, password, roles) 
+                            values (1, '$uuid', 1000, 'mohit', 'mohit@gmail.com', '9999345816', '$password','$roles')");
     }
 
 }

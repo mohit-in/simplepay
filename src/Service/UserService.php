@@ -5,9 +5,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\ORMException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
