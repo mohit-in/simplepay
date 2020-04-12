@@ -84,14 +84,14 @@ class UserController extends AbstractFOSRestController
     {
         try {
             $user = new User();
-            $envelope = $this->messageBus->dispatch(new RegisterUserCommand($user, $request->request->all()));
+            $this->messageBus->dispatch(new RegisterUserCommand($user, $request->request->all()));
             /** @var User $user */
-            $user = $envelope->last(HandledStamp::class)->getResult();
+            #$user = $envelope->last(HandledStamp::class)->getResult();
         } catch (ValidationFailedException $exception) {
             throw new BadRequestHttpException($exception->getViolations()->get(0)->getMessage());
         }
 
-        return View::create($user, Response::HTTP_CREATED);
+        return View::create('', Response::HTTP_NO_CONTENT);
     }
 
     /**
