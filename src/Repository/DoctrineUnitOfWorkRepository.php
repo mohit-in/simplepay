@@ -28,7 +28,7 @@ class DoctrineUnitOfWorkRepository extends ServiceEntityRepository
      *
      * @throws ORMException
      */
-    public function save($entity, $flush = false): void
+    public function save($entity, $flush = true): void
     {
         $this->getEntityManager()->persist($entity);
 

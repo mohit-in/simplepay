@@ -12,7 +12,6 @@ services:
       - 82:80
     volumes:
       - .:/simplepay
-    env_file: ./.docker/.env
     links:
       - app
     networks:
@@ -34,11 +33,28 @@ services:
   db:
     container_name: simplepay-db
     image: mysql:5.7
-    command: --default-authentication-plugin=mysql_natice_password
+    command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_USER: simplepay
-      MYSQL_PASSWORD: Mohit_321
-      MYSQL_ROOT_PASSWORD: Mohit_321
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: simplepay
+    volumes:
+      - .:/simplepay
     networks:
       - simpleplay-network
+
+  phpmyadmin:
+    container_name: simplepay-phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    networks:
+      - simpleplay-network
+    links:
+      - db
+    ports:
+      - 83:80
+    environment:
+      MYSQL_USER: simplepay
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
