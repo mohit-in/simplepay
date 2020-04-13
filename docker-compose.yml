@@ -1,0 +1,44 @@
+version: '3'
+
+networks:
+  simpleplay-network:
+
+services:
+  www:
+    container_name: simplepay-www
+    build: ./.docker/nginx
+    ports:
+      - 81:81
+      - 82:80
+    volumes:
+      - .:/simplepay
+    env_file: ./.docker/.env
+    links:
+      - app
+    networks:
+      simpleplay-network:
+        aliases:
+          - simplepay.com
+
+  app:
+    container_name: simplepay-app
+    build: ./.docker/php
+    volumes:
+      - .:/simplepay
+    links:
+      - db
+    networks:
+      - simpleplay-network
+    hostname: app
+
+  db:
+    container_name: simplepay-db
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_natice_password
+    environment:
+      MYSQL_USER: simplepay
+      MYSQL_PASSWORD: Mohit_321
+      MYSQL_ROOT_PASSWORD: Mohit_321
+      MYSQL_DATABASE: simplepay
+    networks:
+      - simpleplay-network
